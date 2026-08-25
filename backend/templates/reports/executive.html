@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lucy C2 — Executive Report</title>
+  <style>
+    :root { --bg:#0d1117; --card:#161b22; --text:#e6edf3; --muted:#8b949e; --accent:#22c55e; --critical:#ef4444; --high:#f97316; --medium:#f59e0b; --low:#22c55e; --info:#3b82f6; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header { border-bottom: 1px solid #30363d; padding-bottom: 1rem; margin-bottom: 2rem; }
+    h1 { color: var(--accent); margin: 0 0 .5rem; }
+    .meta { color: var(--muted); font-size: .9rem; }
+    .ai-summary { background: var(--card); border-left: 4px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 6px; margin: 1.5rem 0; }
+    .ai-summary h2 { margin-top: 0; font-size: 1.1rem; color: var(--accent); }
+    .ai-summary p { margin: .5rem 0; line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .kpi { background: var(--card); border: 1px solid #30363d; border-radius: 6px; padding: 1rem; }
+    .kpi .label { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
+    .kpi .value { font-size: 2rem; font-weight: 700; margin: .4rem 0; }
+    .kpi .sub { color: var(--muted); font-size: .85rem; }
+    .chart-card { background: var(--card); border: 1px solid #30363d; border-radius: 6px; padding: 1rem; margin: 1.5rem 0; }
+    .chart-card h3 { margin-top: 0; font-size: 1rem; color: var(--text); }
+    .chart-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+    svg { width: 100%; height: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #30363d; padding: .5rem; text-align: left; font-size: .9rem; }
+    th { background: #21262d; color: var(--muted); text-transform: uppercase; font-size: .75rem; }
+    .severity { font-weight: 700; }
+    .severity.critical { color: var(--critical); }
+    .severity.high { color: var(--high); }
+    .severity.medium { color: var(--medium); }
+    .severity.low { color: var(--low); }
+    .severity.info { color: var(--info); }
+    .section { margin: 2rem 0; }
+    footer { color: var(--muted); font-size: .8rem; margin-top: 3rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Executive Engagement Report</h1>
+      <div class="meta">Generated at {{ generated_at }} | Type: {{ report_type }}</div>
+    </header>
+
+    <div class="ai-summary">
+      <h2>AI-Generated Executive Summary</h2>
+      <p>{{ executive_summary }}</p>
+      <p><strong>Key takeaways:</strong> {{ key_takeaways }}</p>
+    </div>
+
+    <div class="grid">
+      <div class="kpi">
+        <div class="label">Agents</div>
+        <div class="value">{{ summary.total_agents }}</div>
+        <div class="sub">{{ summary.online_agents }} online</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Tasks</div>
+        <div class="value">{{ summary.total_tasks }}</div>
+        <div class="sub">{{ summary.completed_tasks }} completed · {{ summary.failed_tasks }} failed</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Credentials</div>
+        <div class="value">{{ summary.total_credentials }}</div>
+        <div class="sub">from {{ cred_by_source|length }} sources</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Findings</div>
+        <div class="value">{{ summary.total_findings }}</div>
+        <div class="sub">{{ summary.findings_critical }} critical · {{ summary.findings_high }} high</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Success Rate</div>
+        <div class="value">{{ summary.success_rate }}%</div>
+        <div class="sub">{{ summary.total_tasks }} total tasks</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Task Distribution</h3>
+      {{ charts.tasks_pie | safe }}
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Top Modules</h3>
+        {{ charts.modules_bar | safe }}
+      </div>
+      <div class="chart-card">
+        <h3>OS Distribution</h3>
+        {{ charts.os_pie | safe }}
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Credentials by Source</h3>
+        {{ charts.creds_bar | safe }}
+      </div>
+      <div class="chart-card">
+        <h3>Findings by Severity</h3>
+        {{ charts.severity_bar | safe }}
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Top Findings</h3>
+      <table>
+        <tr><th>Severity</th><th>Title</th><th>Recommendation</th></tr>
+        {% for f in findings[:10] %}
+        <tr>
+          <td class="severity {{ f.severity }}">{{ f.severity.upper() }}</td>
+          <td>{{ f.title }}</td>
+          <td>{{ f.recommendation }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="section">
+      <h3>Per-Agent Activity</h3>
+      <table>
+        <tr><th>Hostname</th><th>OS</th><th>Status</th><th>Tasks</th><th>Completed</th><th>Credentials</th></tr>
+        {% for a in per_agent %}
+        <tr>
+          <td>{{ a.hostname }}</td>
+          <td>{{ a.os }}</td>
+          <td>{{ a.status }}</td>
+          <td>{{ a.task_count }}</td>
+          <td>{{ a.completed_tasks }}</td>
+          <td>{{ a.credential_count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <footer>Project Lucy — Authorized Red Team Engagement Report</footer>
+  </div>
+</body>
+</html>

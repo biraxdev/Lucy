@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+*.exe
+
+# Local tools / portable runtimes
+tools/python312/
+tools/node20/
+tools/redis/
+tools/tmp/
+
+# Data / secrets
+*.db
+*.db-shm
+*.db-wal
+backend/lucy.db*
+data/lucy.db
+data/reports/
+.env
+.env.local
+
+# Test / cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

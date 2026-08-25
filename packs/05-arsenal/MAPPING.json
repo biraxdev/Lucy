@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "source": "Fifty/50_PROMPT.md",
+  "note": "Mapping machine-readable des 50 outils vers l'architecture Lucy. Chaque entree reference un module Lucy reel (packs/05-arsenal/modules, core existant, ou build tool) et des actions verifiees dans le code. Valide par validate_mapping.py.",
+  "categories": {
+    "implants_backdoors": {
+      "tools": [
+        {"id": 1, "tool": "ShadowStager", "module": "stager", "kind": "module", "actions": ["run_shellcode", "run_dll_mem", "run_pe_mem"], "note": "staging memoire + execution"},
+        {"id": 2, "tool": "Go-Ghost", "module": "beacon_kit", "kind": "module", "actions": ["beacon", "report"], "note": "beacon HTTP + report results"},
+        {"id": 3, "tool": "Rust-Hydra", "module": "persist_kit", "kind": "module", "actions": ["wmi"], "note": "persistance WMI event subscription"},
+        {"id": 4, "tool": "VoidShell", "module": "exec_kit", "kind": "module", "actions": ["shell", "cmd", "run"], "note": "execution de commandes"},
+        {"id": 5, "tool": "Nebula-RAT", "module": "core", "kind": "existing", "actions": [], "note": "transport WebSocket natif Lucy (backend/core/ws_manager.py)"},
+        {"id": 6, "tool": "Titan-Inject", "module": "inject_kit", "kind": "module", "actions": ["hollow", "remote_thread", "apc"], "note": "injection de processus"},
+        {"id": 7, "tool": "Rust-Rootkit-X", "module": "persist_kit", "kind": "module", "actions": ["registry", "schtasks"], "note": "persistance boot (Run key) + taches planifiees"},
+        {"id": 8, "tool": "Go-Beacon-V2", "module": "beacon_kit", "kind": "module", "actions": ["beacon", "heartbeat"], "note": "beaconing + heartbeat"},
+        {"id": 9, "tool": "Storm-C2", "module": "core", "kind": "existing", "actions": [], "note": "orchestrateur + task queue Lucy (backend/core/orchestrator.py)"},
+        {"id": 10, "tool": "Silent-Exec", "module": "exec_kit", "kind": "module", "actions": ["run", "detached"], "note": "execution directe sans cmd.exe"},
+        {"id": 11, "tool": "Dark-Rust-Agent", "module": "polymorph_engine.py", "kind": "build", "actions": [], "note": "mutation de build (polymorphisme)"},
+        {"id": 12, "tool": "Vector-Zero", "module": "core", "kind": "existing", "actions": [], "note": "module bof natif + dispatch modules agent"},
+        {"id": 13, "tool": "Ghost-Link", "module": "beacon_kit", "kind": "module", "actions": ["status"], "note": "verification canal (pipe SMB cote agent)"},
+        {"id": 14, "tool": "Iron-Backdoor", "module": "persist_kit", "kind": "module", "actions": ["service", "registry"], "note": "persistance service Windows / registre"},
+        {"id": 15, "tool": "Pulse-Loader", "module": "stager", "kind": "module", "actions": ["stage_url", "run_dll_mem"], "note": "fetch URL + execution memoire"},
+        {"id": 16, "tool": "Titan-Core", "module": "core", "kind": "existing", "actions": [], "note": "API + orchestration microservices Lucy"},
+        {"id": 17, "tool": "Void-Agent", "module": "core", "kind": "existing", "actions": [], "note": "AES-256-GCM natif (crypto agent/backend)"},
+        {"id": 18, "tool": "Shadow-Core", "module": "persist_kit", "kind": "module", "actions": ["registry"], "note": "persistance registre"},
+        {"id": 19, "tool": "Go-Stealth", "module": "traffic_shaper", "kind": "module", "actions": ["shape", "template", "validate"], "note": "profilage trafic / jitter / headers"},
+        {"id": 20, "tool": "Rust-Sniper", "module": "inject_kit", "kind": "module", "actions": ["list", "remote_thread"], "note": "ciblage PID puis injection"}
+      ]
+    },
+    "harvest": {
+      "excluded": [
+        {"id": 21, "tool": "Ether-Drainer-V3", "reason": "vol wallets tiers - crimeware"},
+        {"id": 24, "tool": "Wallet-Scraper", "reason": "scan wallets crypto - crimeware"},
+        {"id": 25, "tool": "Seed-Phish", "reason": "phishing seed recovery - crimeware"},
+        {"id": 26, "tool": "Crypto-Hook", "reason": "interception transactions crypto - crimeware"},
+        {"id": 29, "tool": "Ledger-Mimic", "reason": "faux firmware hardware wallet - crimeware"},
+        {"id": 30, "tool": "Private-Key-Sniffer", "reason": "sniffing cles crypto - crimeware"},
+        {"id": 31, "tool": "Transaction-Injector", "reason": "detournement d'adresses - crimeware"},
+        {"id": 35, "tool": "Auto-Drainer-Bot", "reason": "drain automatise Telegram - crimeware"}
+      ],
+      "tools": [
+        {"id": 22, "tool": "Key-Grabber-Rust", "module": "secret_hunter", "kind": "module", "actions": ["scan", "scan_path", "patterns"], "note": "harvest credentials red team (env/mem/fichiers)"},
+        {"id": 23, "tool": "Cookie-Miner", "module": "browser_harvest", "kind": "module", "actions": ["cookies", "all"], "note": "extraction cookies navigateur"},
+        {"id": 27, "tool": "Token-Stealer", "module": "browser_harvest", "kind": "module", "actions": ["key", "logins"], "note": "recuperation cles DPAPI / logins"},
+        {"id": 28, "tool": "Vault-Breaker", "module": "brute_local", "kind": "module", "actions": ["crack", "check", "hash"], "note": "audit de hashs locaux (md5/sha1/sha256/sha512/ntlm)"},
+        {"id": 32, "tool": "Auth-bypass-Stealer", "module": "mfa_harvest", "kind": "module", "actions": ["capture", "totp", "validate"], "note": "capture/validation TOTP lors d'engagements autorises"},
+        {"id": 33, "tool": "Session-Hijacker", "module": "browser_harvest", "kind": "module", "actions": ["export", "cookies"], "note": "export jar de session"},
+        {"id": 34, "tool": "Profile-Exporter", "module": "browser_harvest", "kind": "module", "actions": ["all", "export"], "note": "export profil navigateur"}
+      ]
+    },
+    "obfuscation_infrastructure": {
+      "tools": [
+        {"id": 36, "tool": "LLVM-Obfuscator-Pro", "module": "polymorph_engine.py", "kind": "build", "actions": [], "note": "--llvm-fla --llvm-sub --llvm-bcf"},
+        {"id": 37, "tool": "Polymorph-Engine", "module": "polymorph_engine.py", "kind": "build", "actions": [], "note": "mutation source/binaire par build"},
+        {"id": 38, "tool": "Syscall-Wrapper", "module": "syscall_kit", "kind": "module", "actions": ["call", "extract"], "note": "appels syscall directs"},
+        {"id": 39, "tool": "Anti-VM-Suite", "module": "anti_vm", "kind": "module", "actions": ["check", "summary"], "note": "detection VM"},
+        {"id": 40, "tool": "Debugger-Killer", "module": "anti_debug", "kind": "module", "actions": ["check", "summary"], "note": "detection debugger"},
+        {"id": 41, "tool": "C2-Mesh-Proxy", "module": "c2_mesh.py", "kind": "build", "actions": [], "note": "generation redirectors nginx/haproxy"},
+        {"id": 42, "tool": "NATS-Broker-Covert", "module": "beacon_kit", "kind": "module", "actions": ["beacon"], "note": "canaux alternatifs + store RAM (covert_store env_set/env_get)"},
+        {"id": 43, "tool": "Redis-Stealth-Store", "module": "covert_store", "kind": "module", "actions": ["file_put", "file_get"], "note": "store furtif (RAM par defaut)"},
+        {"id": 44, "tool": "Traffic-Shaper", "module": "traffic_shaper", "kind": "module", "actions": ["shape", "chunk"], "note": "pad / sleep / chunking"},
+        {"id": 45, "tool": "Domain-Fronting-Tool", "module": "domain_fronting", "kind": "module", "actions": ["probe", "relay", "request"], "note": "test / scan / setup fronting"},
+        {"id": 46, "tool": "API-Unlinker", "module": "syscall_kit", "kind": "module", "actions": ["unhook"], "note": "unhook API"},
+        {"id": 47, "tool": "Memory-Scanner-Hider", "module": "covert_store", "kind": "module", "actions": ["env_set", "env_get"], "note": "stockage memoire chiffre"},
+        {"id": 48, "tool": "Binary-Packer-Custom", "module": "binary_packer.py", "kind": "build", "actions": [], "note": "build PyInstaller/UPX/zipapp"},
+        {"id": 49, "tool": "Payload-Encoder", "module": "payload_encoder.py", "kind": "build", "actions": [], "note": "XOR/AES/base64/rot13 + stubs"},
+        {"id": 50, "tool": 
+"Ghost-Deployer", "module": "ghost_deployer.py", "kind": "build", "actions": [], "note": "deploiement automatise MaaS"}
+      ]
+    }
+  }
+}

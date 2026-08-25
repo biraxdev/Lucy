@@ -1,0 +1,203 @@
+{
+  "installed_at": "2026-08-17T23:24:29.969657+00:00",
+  "root": "C:\\Heybro\\PROJECTS\\ACTIVE\\Lucy",
+  "db": "C:\\Heybro\\PROJECTS\\ACTIVE\\Lucy\\backend\\./lucy.db",
+  "backend_seed": true,
+  "modules_copied": [
+    "anti_debug.py",
+    "anti_vm.py",
+    "beacon_kit.py",
+    "browser_harvest.py",
+    "brute_local.py",
+    "covert_store.py",
+    "domain_fronting.py",
+    "exec_kit.py",
+    "inject_kit.py",
+    "mfa_harvest.py",
+    "persist_kit.py",
+    "secret_hunter.py",
+    "stager.py",
+    "syscall_kit.py",
+    "traffic_shaper.py"
+  ],
+  "build_tools_copied": [
+    "binary_packer.py",
+    "c2_mesh.py",
+    "ghost_deployer.py",
+    "payload_encoder.py",
+    "polymorph_engine.py"
+  ],
+  "seeded": [
+    {
+      "name": "anti_debug",
+      "version": "1.0.0",
+      "signature": "e9c5e4072e94f07f0a607c42c3d35fd3408a111d0eedc7cff55b9eab83783b23"
+    },
+    {
+      "name": "anti_vm",
+      "version": "1.0.0",
+      "signature": "dbbc8b40ad22b9412fb1c9847caba39fe7e7f760cfb2d75ce553a265a14bffa5"
+    },
+    {
+      "name": "beacon_kit",
+      "version": "1.0.0",
+      "signature": "862badef987a19d7f6fcecd942aee208e0985a0856adbdc6093547cab2af1b51"
+    },
+    {
+      "name": "browser_harvest",
+      "version": "1.0.0",
+      "signature": "37bc4d7f431cf00becd0858424fb655144b05f5674b1bfc6a8fdaa1fe6c39be0"
+    },
+    {
+      "name": "brute_local",
+      "version": "1.0.0",
+      "signature": "8f599609d57b8d455d9f4661d7126aa4d45a3534f627d9214af682657a388028"
+    },
+    {
+      "name": "covert_store",
+      "version": "1.0.0",
+      "signature": "f30b2bc8482de39691f77d4bdbd7dfc18a52982955bbaf11bed776baa818b61f"
+    },
+    {
+      "name": "domain_fronting",
+      "version": "1.0.0",
+      "signature": "549a5402c3a1c92ff31c02690c98173a3c1257e76f2818bab6b0e528dd23d881"
+    },
+    {
+      "name": "exec_kit",
+      "version": "1.0.0",
+      "signature": "dadd74ac74ea0eac9472127f306c128672c545d7953e3575a18df9a89718a685"
+    },
+    {
+      "name": "inject_kit",
+      "version": "1.0.0",
+      "signature": "54bc686ab1c3293601511dbacceb866e340003a05df4a622b374b1d3de0a1e77"
+    },
+    {
+      "name": "mfa_harvest",
+      "version": "1.0.0",
+      "signature": "13b24f43753cefdcbb5684fab07382a902caa25387d7bffada1ccf16161ff1f5"
+    },
+    {
+      "name": "persist_kit",
+      "version": "1.0.0",
+      "signature": "cdf05ec7e7f2f545546a9fd433b539381c629baa80dc354dd2893251566485c3"
+    },
+    {
+      "name": "secret_hunter",
+      "version": "1.0.0",
+      "signature": "4eb13d221cbdd7d3c3f01e3bde7ba7233b53c44e04d2d271ca69b1bed058b197"
+    },
+    {
+      "name": "stager",
+      "version": "1.0.0",
+      "signature": "17ffe684d334860bbd6ccdcb7b61677775cb141194b4dcf5ebc82a0505776174"
+    },
+    {
+      "name": "syscall_kit",
+      "version": "1.0.0",
+      "signature": "e7f6d7e22ba324fd808a7b2dbf8cd586c2967ea497dc19849edb32082b129cb1"
+    },
+    {
+      "name": "traffic_shaper",
+      "version": "1.0.0",
+      "signature": "c9037c3a04ffd5f2dc8a337eecc77ad5b5f516a3fa914a2793da86aec799c8ec"
+    }
+  ],
+  "active_modules": [
+    {
+      "name": "anti_debug",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "anti_vm",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "beacon_kit",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "browser_harvest",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "brute_local",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "covert_store",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "domain_fronting",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "exec_kit",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "inject_kit",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "mfa_harvest",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "persist_kit",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "secret_hunter",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "stager",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "syscall_kit",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    },
+    {
+      "name": "traffic_shaper",
+      "version": "1.0.0",
+      "enabled": true,
+      "signature_ok": true
+    }
+  ],
+  "paths": {
+    "backend_modules": "C:\\Heybro\\PROJECTS\\ACTIVE\\Lucy\\backend\\modules",
+    "tools_arsenal": "C:\\Heybro\\PROJECTS\\ACTIVE\\Lucy\\tools\\arsenal"
+  }
+}

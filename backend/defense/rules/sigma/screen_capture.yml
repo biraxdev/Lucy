@@ -1,0 +1,22 @@
+title: Potential Screen Capture or Webcam Access
+description: |
+  Detects API calls or binaries associated with screen capture
+  (BitBlt, PrintWindow) or webcam access (DirectShow, capCreateCaptureWindow).
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    CommandLine|contains:
+      - 'BitBlt'
+      - 'PrintWindow'
+      - 'capCreateCaptureWindow'
+      - 'DirectShow'
+      - 'MagnificationAPI'
+  condition: selection
+falsepositives:
+  - Legitimate screen recording software
+level: medium
+tags:
+  - attack.t1125
+  - attack.collection

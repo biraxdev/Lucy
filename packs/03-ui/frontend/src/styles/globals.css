@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sidebar-width: 240px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  @apply bg-base-100 text-base-content;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { @apply bg-base-200; }
+.scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-base-content/30 rounded; }
+
+.badge-online  { @apply badge badge-success; }
+.badge-offline { @apply badge badge-error; }
+.badge-idle    { @apply badge badge-warning; }
+
+.stat-card {
+  @apply card bg-base-200 shadow-md p-4 flex flex-col gap-1;
+}
+
+.page-container {
+  @apply p-6 max-w-screen-2xl mx-auto;
+}
+
+/* Micro-interaction utilities */
+.interactive {
+  @apply transition-all duration-200 ease-out;
+}
+
+.interactive:hover {
+  @apply -translate-y-0.5;
+}
+
+.glass-card {
+  @apply bg-base-200/80 backdrop-blur border border-base-300/50;
+}
+
+/* Staggered list reveal handled via Framer Motion */
+.reveal-list > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: reveal 0.25s ease-out forwards;
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Running task shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.task-running-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* === Intelligent status animations === */
+
+/* Soft pulse for alive/waiting indicators */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Fast pulse for running operations */
+@keyframes pulse-fast {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.animate-pulse-fast {
+  animation: pulse-fast 0.8s ease-in-out infinite;
+}
+
+/* Glow ring for live agents */
+@keyframes glow-ring {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.animate-glow-ring {
+  animation: glow-ring 2s ease-out infinite;
+}
+
+/* Progress bar indeterminate sweep */
+@keyframes progress-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+.animate-progress-sweep {
+  animation: progress-sweep 1.5s ease-in-out infinite;
+}
+
+/* Card entrance with bounce */
+@keyframes card-bounce-in {
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-card-bounce {
+  animation: card-bounce-in 0.4s ease-out forwards;
+}
+
+/* Status dot ping (like a radar) */
+@keyframes dot-ping {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+.animate-dot-ping {
+  animation: dot-ping 1.5s ease-out infinite;
+}
+
+/* Shimmer for progress bar fill */
+@keyframes fill-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-fill-shimmer {
+  background: linear-gradient(90deg, currentColor 0%, rgba(255,255,255,0.3) 50%, currentColor 100%);
+  background-size: 200% 100%;
+  animation: fill-shimmer 1.5s linear infinite;
+}
+
+/* Smooth focus ring for interactive cards */
+.group:focus-visible {
+  @apply outline-none ring-2 ring-success/40 ring-offset-2 ring-offset-base-100;
+}
+

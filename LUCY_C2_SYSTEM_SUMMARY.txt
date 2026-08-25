@@ -1,0 +1,85 @@
+LUCY C2 SYSTEM SUMMARY
+======================
+
+Core Socle:      FastAPI + SQLite + WebSocket  -> Le cerveau
+Agent Pack:      Python Implant + Dynamic Loader -> Le bras arme
+UI Pack:         React + TypeScript + Tailwind  -> Les yeux
+Extension Pack:  Groupes de modules (Gestion / Analyse / Strategie / Reseau) -> Les muscles
+Module DIY:      Nouveau fichier .py -> Fonction run() -> Resultat JSON -> Dashboard update
+
+---
+
+PACK 1 — LE SOCLE (Cerveau)
+  Dossier: packs/01-core/
+  Fichiers: backend/main.py, config.py, middleware.py, dependencies.py, database.py
+             core/crypto.py, ws_manager.py, module_manager.py, auth.py, task_queue.py
+             db/models.py, db/migrations/001_initial.py
+             api/ (health, auth, ws, agents, tasks, modules, build, setup, groups, credentials, logs, monitor, chat, alerts, dashboard)
+  Description: Station spatiale. Recoit les donnees, les stocke, les affiche.
+  Code logique: Backend (FastAPI) -> Database (SQLite) -> Communication (WebSocket)
+  Demarrage: uvicorn main:app --reload
+
+---
+
+PACK 2 — L'AGENT & MODULES (Bras Arme)
+  Dossier: packs/02-agent/
+  Fichiers: agent/agent.py, core/loader.py, core/crypto.py, core/stealth.py
+             modules/ (shell, screenshot, keylog, browser, builtin, clipboard, edr_evasion, injection, kerberoast, lateral, persistence, pivoting, port_scan, remote_control, sleep_mask, tls_fingerprint, token, uac_bypass, webcam, wifi, etc.)
+  Description: Implant leger sur la cible. Telephone au C2 pour savoir quoi faire.
+  Code logique: Agent Loop -> Module Download -> Execution -> Result Return
+  Demarrage: python agent.py
+  Module DIY: Voir packs/02-agent/MODULE_DIY.md
+
+---
+
+PACK 3 — L'INTERFACE (Yeux)
+  Dossier: packs/03-ui/
+  Fichiers: frontend/src/App.tsx, frontend/src/routes.tsx
+             stores/*.ts (Zustand), api/client.ts (Axios), hooks/*.ts
+             pages/ (Dashboard, Agents, Chat, Builder, Terminal, Map, Strategy, Reports, etc.)
+             components/ (Layout, Sidebar, Navbar, ui/)
+  Description: Centre de controle visuel. Filtrer les agents, lancer des taches en un clic.
+  Code logique: React Components -> Zustand State -> Axios API Calls
+  Demarrage: npm install && npm run dev
+
+---
+
+PACK 4 — LES EXTENSIONS (Muscles)
+  Dossier: packs/04-extensions/
+  Sous-packs:
+    4a Gestion:      rbac, operators, tenants
+    4b Analyse:      reports, findings, audit
+    4c Strategie:    strategy, playbooks, timelines (MITRE ATT&CK)
+    4d Reseau:       c2_profiles, redirectors, ws, auto_recon
+  Description: Modules secondaires groupes par thematique. Activables via .env.
+
+---
+
+MODULE DIY — La Recette
+1. Creer un fichier .py dans agent/modules/
+2. Definir: NAME, VERSION, DESCRIPTION, AUTHOR, DEPENDENCIES, OS_COMPAT
+3. Definir: def run(action: str, params: dict) -> dict
+4. Retourner: {"status": "completed"|"failed", "data": ..., "error": ...}
+
+Regles: stdlib only, pas d'ecriture disque, pas de stdout, thread-safe, timeout 60s.
+
+---
+
+SECURITE
+  Chiffrement: ECDH P-256 + AES-256-GCM + HKDF
+  Auth: JWT (30min access / 7j refresh) + API Key rotation
+  Signature: HMAC-SHA256 pour tous les modules
+  Watermarking: operator_id + build_id + TTL sur chaque agent genere
+
+---
+
+MODE PORTABLE
+  python tools/portable/launcher.py
+  Backend demarre sur 127.0.0.1:8000, sert le frontend, DB SQLite locale.
+  Pas de Docker, pas de Redis, pas de dependances externes.
+
+---
+
+CONTACT
+  Fichier structure: project-lucy-structure.md
+  Prompts systeme: MASTER_PROMPT.md

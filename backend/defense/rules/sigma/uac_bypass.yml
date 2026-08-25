@@ -1,0 +1,23 @@
+title: UAC Bypass via Auto-Elevated Binaries
+description: |
+  Detects known User Account Control bypass patterns that abuse auto-elevated
+  binaries such as fodhelper, computerdefaults, sdclt, eventvwr, or dccwlaunch.
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    Image|endswith:
+      - '\fodhelper.exe'
+      - '\computerdefaults.exe'
+      - '\sdclt.exe'
+      - '\eventvwr.exe'
+      - '\dccw.exe'
+  condition: selection
+falsepositives:
+  - Rare legitimate administrative usage
+level: high
+tags:
+  - attack.t1548.002
+  - attack.privilege_escalation
+  - attack.defense_evasion

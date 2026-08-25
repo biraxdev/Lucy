@@ -1,0 +1,4 @@
+psutil>=5.9
+websocket-client>=1.6
+pycryptodome>=3.19
+cryptography>=41.0

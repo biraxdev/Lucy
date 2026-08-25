@@ -1,0 +1,59 @@
+# Lucy C2 — Runtime-only requirements (trimmed for portable deployment)
+# Excludes: pytest, pytest-asyncio, pytest-cov, pyinstaller, weasyprint, and other dev/build tools.
+# This produces a smaller venv (~80 MB) suitable for USB-portable distribution.
+
+# Core framework
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+starlette==0.37.2
+websockets==12.0
+
+# ORM
+peewee==3.17.5
+
+# Crypto
+pycryptodome==3.20.0
+cryptography==42.0.8
+
+# Auth
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+
+# Validation
+pydantic==2.7.3
+pydantic-settings==2.3.4
+email-validator==2.1.1
+
+# Task queue
+celery==5.4.0
+redis==5.0.6
+
+# System metrics
+psutil==5.9.8
+
+# Scheduling
+croniter==2.0.5
+
+# Reporting / templating
+jinja2==3.1.4
+markdown-it-py==3.1.0
+
+# Image processing (screenshots, etc.)
+Pillow==10.3.0
+
+# Utilities
+python-multipart==0.0.9
+slowapi==0.1.9
+orjson==3.10.5
+python-dotenv==1.0.1
+
+# GraphQL API
+graphene==3.3
+starlette-graphene3==0.6.0
+
+# HTTP client
+httpx==0.27.0
+
+# Portable native desktop window
+pywebview==5.2

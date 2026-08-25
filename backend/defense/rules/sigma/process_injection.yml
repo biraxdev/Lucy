@@ -1,0 +1,24 @@
+title: Suspicious Process Injection Activity
+description: |
+  Detects behavior consistent with process injection techniques such as
+  CreateRemoteThread, NtMapViewOfSection, QueueUserAPC, or process hollowing.
+  These are commonly used by malware and post-exploitation frameworks.
+logsource:
+  product: windows
+  category: process_access
+detection:
+  selection:
+    CallTrace|contains:
+      - 'CreateRemoteThread'
+      - 'NtMapViewOfSection'
+      - 'QueueUserAPC'
+      - 'PROCESS_HOLLOW'
+  condition: selection
+falsepositives:
+  - Legitimate EDR/AV products
+  - Some debugging tools
+level: critical
+tags:
+  - attack.t1055
+  - attack.defense_evasion
+  - attack.privilege_escalation

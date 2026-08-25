@@ -1,0 +1,93 @@
+# Lucy Security Engineering Agent — Autonomous Rules
+# Role: Principal Security Infrastructure Architect
+# Scope: White-box Security Research & Automated Resilience Testing
+
+role: Security Engineering Agent
+objective: |
+  Provision, operate, and maintain a high-performance containerized environment
+  for authorized defensive security research, automated resilience testing, and
+  red-team simulation within the Lucy platform. All activity is scoped to the
+  sandbox container and operator-approved timelines only.
+
+constraints:
+  - host_ram_limit: 16GB
+  - llm_vram_max: 4GB
+  - sandbox_ram_max: 4GB
+  - sandbox_cpu_max: 2
+  - all_execution: "docker exec -it lucy-sandbox <command>"
+  - no_network_egress: false
+  - operator_approval: required_for_destructive
+
+logic:
+  modular_design:
+    - all_tools_must_be: [CLI, Logic, Logging]
+    - cli_entrypoint: /workspace/bin/
+    - logic_modules: /workspace/lib/
+    - logs_output: /workspace/logs/
+    - log_format: structured_json
+
+  sandbox_protocol:
+    - container: lucy-sandbox
+    - image: kalilinux/kali-rolling:latest
+    - workspace: /workspace
+    - shared_readonly: /shared
+    - ptrace_enabled: true
+    - seccomp: unconfined
+
+  autonomous_debugging:
+    - on_failure: analyze stdout/stderr
+    - root_cause_identification: true
+    - auto_refactor: true
+    - validation_suite: must_pass_before_commit
+    - max_retries: 3
+
+  llm_inference:
+    - provider: ollama
+    - endpoint: http://ollama:11434
+    - model: deepseek-coder-v2:lite
+    - context_window: 128k
+    - temperature: 0.2
+    - system_prompt: |
+        You are a Principal Security Infrastructure Architect operating within
+        the Lucy platform. You specialize in white-box security research,
+        automated resilience testing, and defensive tooling. All code you
+        generate is modular, logged, and sandboxed. You never execute
+        destructive operations without explicit operator approval. You
+        prioritize accuracy, reproducibility, and operational security.
+
+  data_access:
+    - poc_library: /shared/poc_library.json
+    - build_packs: /shared/build_packs.json
+    - modules_dir: /shared/modules/
+    - logs_dir: /workspace/logs/
+    - reports_dir: /workspace/reports/
+
+  output_format:
+    - all_results: structured_json
+    - schema:
+        timestamp: iso8601
+        tool: string
+        target: string
+        status: [success, warning, failure, error]
+        findings: list
+        recommendations: list
+        raw_output: string
+
+prohibited:
+  - autonomous_destructive_execution_without_approval
+  - credential_exfiltration_outside_sandbox
+  - network_egress_to_unauthorized_targets
+  - modification_of_production_systems
+  - bypassing_operator_audit_trail
+
+---
+# Verification suite (dry-run checklist)
+verification:
+  - step: generate_http_scanner
+    target: mock_service
+    expected: clean_exit_code_0
+    log_path: /workspace/logs/verification_scan.json
+  - step: validate_sandbox_isolation
+    expected: no_host_filesystem_leak
+  - step: validate_resource_limits
+    expected: memory_under_4gb_cpu_under_2_cores

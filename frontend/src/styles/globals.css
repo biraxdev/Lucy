@@ -1,0 +1,250 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sidebar-width: 240px;
+  --flash-pink: #ff0055;
+  --flash-cyan: #00d4ff;
+  --flash-green: #00ff88;
+  --flash-amber: #ffbe0b;
+  --flash-red: #ff2a2a;
+  --surface-900: #000000;
+  --surface-800: #0a0a0a;
+  --surface-700: #171717;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  @apply bg-base-100 text-base-content;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  background-color: #000000;
+  color: #f8fafc;
+}
+
+/* Scrollbar — dark minimal */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #ff005533; }
+
+.scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: #0a0a0a; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #ff005533; }
+
+.badge-online  { @apply badge badge-success; }
+.badge-offline { @apply badge badge-error; }
+.badge-idle    { @apply badge badge-warning; }
+
+.stat-card {
+  @apply card bg-base-200 shadow-md p-4 flex flex-col gap-1;
+}
+
+.page-container {
+  @apply p-6 max-w-screen-2xl mx-auto;
+}
+
+/* Micro-interaction utilities */
+.interactive {
+  @apply transition-all duration-200 ease-out;
+}
+.interactive:hover {
+  @apply -translate-y-0.5;
+}
+
+/* Glassmorphism */
+.glass-card {
+  @apply bg-base-200/60 backdrop-blur-xl border border-white/5;
+}
+.glass-panel {
+  @apply bg-base-200/40 backdrop-blur-md border border-white/5;
+}
+.glass-strong {
+  @apply bg-base-200/80 backdrop-blur-2xl border border-white/10;
+}
+
+/* Flash border accents */
+.neon-border-green {
+  box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.25), inset 0 0 20px rgba(0, 255, 136, 0.03);
+}
+.neon-border-cyan {
+  box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.25), inset 0 0 20px rgba(0, 212, 255, 0.03);
+}
+.neon-border-purple {
+  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.25), inset 0 0 20px rgba(168, 85, 247, 0.03);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #ff0055 0%, #00d4ff 50%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-green {
+  background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Mesh gradient background for hero/login */
+.mesh-gradient {
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(255, 0, 85, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(0, 212, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(168, 85, 247, 0.03) 0%, transparent 60%),
+    #000000;
+}
+
+/* Grid background pattern */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Scanline overlay — very subtle */
+.scanline-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.2) 2px,
+    rgba(0, 0, 0, 0.2) 4px
+  );
+  z-index: 9999;
+  opacity: 0.05;
+}
+
+/* Staggered list reveal handled via Framer Motion */
+.reveal-list > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: reveal 0.25s ease-out forwards;
+}
+@keyframes reveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Running task shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.task-running-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* === Status animations === */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+@keyframes pulse-fast {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.animate-pulse-fast {
+  animation: pulse-fast 0.8s ease-in-out infinite;
+}
+
+@keyframes glow-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 0, 85, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
+}
+.animate-glow-ring {
+  animation: glow-ring 2s ease-out infinite;
+}
+
+@keyframes glow-ring-cyan {
+  0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+}
+.animate-glow-ring-cyan {
+  animation: glow-ring-cyan 2s ease-out infinite;
+}
+
+@keyframes progress-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+.animate-progress-sweep {
+  animation: progress-sweep 1.5s ease-in-out infinite;
+}
+
+@keyframes card-bounce-in {
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-card-bounce {
+  animation: card-bounce-in 0.4s ease-out forwards;
+}
+
+@keyframes dot-ping {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+.animate-dot-ping {
+  animation: dot-ping 1.5s ease-out infinite;
+}
+
+@keyframes fill-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-fill-shimmer {
+  background: linear-gradient(90deg, currentColor 0%, rgba(255,255,255,0.3) 50%, currentColor 100%);
+  background-size: 200% 100%;
+  animation: fill-shimmer 1.5s linear infinite;
+}
+
+/* Gradient border animation */
+@keyframes gradient-border {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.gradient-border {
+  background: linear-gradient(90deg, #ff0055, #00d4ff, #a855f7, #ff0055);
+  background-size: 300% 300%;
+  animation: gradient-border 4s ease infinite;
+}
+
+/* Floating particles for backgrounds */
+@keyframes float-particle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.3; }
+  25% { transform: translate(10px, -20px) rotate(5deg); opacity: 0.6; }
+  50% { transform: translate(-5px, -40px) rotate(-3deg); opacity: 0.4; }
+  75% { transform: translate(15px, -15px) rotate(2deg); opacity: 0.5; }
+}
+
+/* Typing cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+/* Smooth focus ring for interactive cards */
+.group:focus-visible {
+  @apply outline-none ring-2 ring-primary/40 ring-offset-2 ring-offset-base-100;
+}

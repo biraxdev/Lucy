@@ -1,0 +1,22 @@
+title: Potential Keylogging Activity
+description: |
+  Detects low-level keyboard hooks (SetWindowsHookEx with WH_KEYBOARD_LL),
+  repeated GetAsyncKeyState calls, or keylogger artifacts in command lines.
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    CommandLine|contains:
+      - 'SetWindowsHookEx'
+      - 'WH_KEYBOARD_LL'
+      - 'GetAsyncKeyState'
+      - 'LLMHF'
+      - 'keylog'
+  condition: selection
+falsepositives:
+  - Accessibility or security research tools
+level: medium
+tags:
+  - attack.t1056.001
+  - attack.collection

@@ -1,0 +1,21 @@
+title: Persistence via Registry Run Key
+description: |
+  Detects creation or modification of Windows registry run keys used by
+  adversaries to establish persistence.
+logsource:
+  product: windows
+  category: registry_set
+detection:
+  selection:
+    EventType: SetValue
+    TargetObject|contains:
+      - '\Software\Microsoft\Windows\CurrentVersion\Run'
+      - '\Software\Microsoft\Windows\CurrentVersion\RunOnce'
+      - '\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx'
+  condition: selection
+falsepositives:
+  - Legitimate software installers
+level: high
+tags:
+  - attack.t1547.001
+  - attack.persistence

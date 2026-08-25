@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lucy C2 — Engagement Report</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; color: #e6edf3; padding: 2.5rem; line-height: 1.5; }
+  a { color: #58a6ff; }
+  h1 { color: #22c55e; font-size: 1.8rem; border-bottom: 2px solid #22c55e33; padding-bottom: .6rem; margin-bottom: .3rem; }
+  h2 { color: #58a6ff; font-size: 1.15rem; margin: 2rem 0 .8rem; border-left: 3px solid #58a6ff; padding-left: .7rem; }
+  h3 { color: #8b949e; font-size: .95rem; margin: 1.2rem 0 .4rem; }
+  .meta { color: #8b949e; font-size: .85rem; margin-bottom: 2rem; }
+  table { border-collapse: collapse; width: 100%; margin: .8rem 0 1.5rem; font-size: .85em; }
+  th, td { border: 1px solid #21262d; padding: .45rem .75rem; text-align: left; vertical-align: top; }
+  th { background: #161b22; color: #8b949e; font-weight: 600; white-space: nowrap; }
+  tr:nth-child(even) { background: #0d1117; }
+  tr:nth-child(odd)  { background: #161b22; }
+  .badge { display: inline-block; padding: .1rem .45rem; border-radius: 4px; font-size: .78em; font-weight: 700; letter-spacing: .03em; }
+  .online    { background: #22c55e22; color: #22c55e; border: 1px solid #22c55e44; }
+  .offline   { background: #ef444422; color: #ef4444; border: 1px solid #ef444444; }
+  .completed { background: #22c55e22; color: #22c55e; border: 1px solid #22c55e44; }
+  .failed    { background: #ef444422; color: #ef4444; border: 1px solid #ef444444; }
+  .running   { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44; }
+  .pending   { background: #6b728022; color: #9ca3af; border: 1px solid #6b728044; }
+  .sev-critical { background: #ef444422; color: #ef4444; border: 1px solid #ef444455; }
+  .sev-high     { background: #f97316aa; color: #fdba74; border: 1px solid #f9731655; }
+  .sev-medium   { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44; }
+  .sev-low      { background: #6b728022; color: #9ca3af; border: 1px solid #6b728044; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .8rem; margin: 1rem 0 2rem; }
+  .stat-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: .9rem 1rem; text-align: center; }
+  .stat-card .value { font-size: 1.9rem; font-weight: 800; color: #22c55e; }
+  .stat-card .value.warn { color: #f59e0b; }
+  .stat-card .value.danger { color: #ef4444; }
+  .stat-card .label { font-size: .75rem; color: #6b7280; margin-top: .2rem; text-transform: uppercase; letter-spacing: .05em; }
+  .finding { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 1rem 1.2rem; margin-bottom: .8rem; }
+  .finding-header { display: flex; align-items: center; gap: .7rem; margin-bottom: .5rem; }
+  .finding-id { font-size: .75rem; color: #6b7280; font-family: monospace; }
+  .finding-title { font-weight: 600; font-size: .95rem; }
+  .finding-body { font-size: .83rem; color: #8b949e; }
+  .finding-body b { color: #e6edf3; }
+  .finding-section { margin-top: .4rem; }
+  .progress-bar { background: #21262d; border-radius: 4px; height: 6px; margin-top: .3rem; }
+  .progress-fill { background: #22c55e; height: 6px; border-radius: 4px; }
+  .page-break { page-break-before: always; margin-top: 2rem; }
+  @media print { body { background: white; color: black; } .stat-card { border: 1px solid #ccc; } }
+</style>
+</head>
+<body>
+
+<h1>🛡 Lucy C2 — Engagement Report</h1>
+<p class="meta">Generated: {{ generated_at }} &nbsp;·&nbsp; Type: <strong>{{ report_type }}</strong> &nbsp;·&nbsp; Confidential — Authorized Red Team Only</p>
+
+<!-- EXECUTIVE SUMMARY -->
+<h2>Executive Summary</h2>
+<div class="stat-grid">
+  <div class="stat-card"><div class="value">{{ summary.total_agents }}</div><div class="label">Agents</div></div>
+  <div class="stat-card"><div class="value {% if summary.online_agents > 0 %}danger{% endif %}">{{ summary.online_agents }}</div><div class="label">Still Online</div></div>
+  <div class="stat-card"><div class="value">{{ summary.total_tasks }}</div><div class="label">Tasks Run</div></div>
+  <div class="stat-card"><div class="value">{{ summary.success_rate }}%</div><div class="label">Success Rate</div></div>
+  <div class="stat-card"><div class="value {% if summary.total_credentials > 0 %}danger{% endif %}">{{ summary.total_credentials }}</div><div class="label">Credentials</div></div>
+  <div class="stat-card"><div class="value {% if summary.findings_critical > 0 %}danger{% endif %}">{{ summary.findings_critical }}</div><div class="label">Critical Findings</div></div>
+  <div class="stat-card"><div class="value warn">{{ summary.findings_high }}</div><div class="label">High Findings</div></div>
+  <div class="stat-card"><div class="value">{{ summary.total_timelines }}</div><div class="label">Timelines</div></div>
+</div>
+
+<!-- FINDINGS -->
+<h2>🔎 Findings</h2>
+{% for f in findings %}
+<div class="finding">
+  <div class="finding-header">
+    <span class="badge sev-{{ f.severity }}">{{ f.severity | upper }}</span>
+    <span class="finding-id">{{ f.id }}</span>
+    <span class="finding-title">{{ f.title }}</span>
+  </div>
+  <div class="finding-body">
+    <div class="finding-section"><b>Description:</b> {{ f.description }}</div>
+    <div class="finding-section"><b>Recommendation:</b> {{ f.recommendation }}</div>
+    <div class="finding-section"><b>Evidence:</b> {{ f.evidence }}</div>
+  </div>
+</div>
+{% else %}
+<p style="color:#6b7280;font-size:.85rem;">No findings generated.</p>
+{% endfor %}
+
+<!-- PER-AGENT BREAKDOWN -->
+<h2>🖥 Agent Breakdown ({{ per_agent | length }})</h2>
+<table>
+  <tr><th>Hostname</th><th>OS</th><th>User</th><th>IP Private</th><th>IP Public</th><th>Status</th><th>Tasks</th><th>Done</th><th>Creds</th><th>Last Seen</th></tr>
+  {% for a in per_agent %}
+  <tr>
+    <td>{{ a.hostname }}</td>
+    <td>{{ a.os }}</td>
+    <td>{{ a.username }}</td>
+    <td>{{ a.ip_private }}</td>
+    <td>{{ a.ip_public }}</td>
+    <td><span class="badge {{ a.status }}">{{ a.status }}</span></td>
+    <td>{{ a.task_count }}</td>
+    <td>{{ a.completed_tasks }}</td>
+    <td>{% if a.credential_count > 0 %}<span class="badge sev-high">{{ a.credential_count }}</span>{% else %}0{% endif %}</td>
+    <td style="font-size:.78em;color:#6b7280">{{ a.last_seen }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- TOP MODULES -->
+<h2>📦 Top Modules Used</h2>
+<table>
+  <tr><th>Module</th><th>Executions</th><th>Usage Bar</th></tr>
+  {% set max_count = top_modules[0][1] if top_modules else 1 %}
+  {% for mod, count in top_modules %}
+  <tr>
+    <td><code>{{ mod }}</code></td>
+    <td>{{ count }}</td>
+    <td style="width:200px">
+      <div class="progress-bar"><div class="progress-fill" style="width:{{ (count / max_count * 100) | int }}%"></div></div>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- CREDENTIALS -->
+<h2>🔑 Credentials Harvested ({{ credentials | length }})</h2>
+{% if cred_by_source %}
+<h3>By Source</h3>
+<table style="width:auto;margin-bottom:1.5rem">
+  <tr><th>Source</th><th>Count</th></tr>
+  {% for src, cnt in cred_by_source.items() %}
+  <tr><td>{{ src }}</td><td>{{ cnt }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+<table>
+  <tr><th>#</th><th>URL / Host</th><th>Username</th><th>Source</th><th>Confidence</th><th>Agent</th><th>Captured</th></tr>
+  {% for c in credentials %}
+  <tr>
+    <td>{{ loop.index }}</td>
+    <td style="max-width:200px;word-break:break-all">{{ c.url or c.hostname or '—' }}</td>
+    <td>{{ c.username }}</td>
+    <td>{{ c.source }}</td>
+    <td><span class="badge sev-{{ c.confidence or 'low' }}">{{ c.confidence or '—' }}</span></td>
+    <td style="font-size:.78em">{{ c.agent_id[:8] }}…</td>
+    <td style="font-size:.78em;color:#6b7280">{{ c.captured_at }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- TASKS -->
+<h2 class="page-break">📋 Task Log ({{ tasks | length }})</h2>
+<table>
+  <tr><th>Module</th><th>Action</th><th>Status</th><th>Priority</th><th>Agent</th><th>Created</th></tr>
+  {% for t in tasks[:200] %}
+  <tr>
+    <td><code>{{ t.module }}</code></td>
+    <td>{{ t.action }}</td>
+    <td><span class="badge {{ t.status }}">{{ t.status }}</span></td>
+    <td>{{ t.priority }}</td>
+    <td style="font-size:.78em">{{ t.agent_id[:8] if t.agent_id else '—' }}…</td>
+    <td style="font-size:.78em;color:#6b7280">{{ t.created_at }}</td>
+  </tr>
+  {% endfor %}
+  {% if tasks | length > 200 %}<tr><td colspan="6" style="color:#6b7280;text-align:center">… {{ tasks | length - 200 }} more tasks truncated</td></tr>{% endif %}
+</table>
+
+</body>
+</html>

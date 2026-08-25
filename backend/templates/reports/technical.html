@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lucy C2 — Technical Report</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Consolas', 'Courier New', monospace; background: #0d1117; color: #e6edf3; padding: 2.5rem; line-height: 1.6; font-size: .88rem; }
+  h1 { color: #22c55e; font-size: 1.6rem; border-bottom: 2px solid #22c55e33; padding-bottom: .6rem; margin-bottom: .3rem; font-family: 'Segoe UI', sans-serif; }
+  h2 { color: #58a6ff; font-size: 1.05rem; margin: 2rem 0 .7rem; border-left: 3px solid #58a6ff; padding-left: .7rem; font-family: 'Segoe UI', sans-serif; }
+  h3 { color: #8b949e; font-size: .9rem; margin: 1rem 0 .4rem; }
+  .meta { color: #8b949e; font-size: .82rem; margin-bottom: 2rem; font-family: 'Segoe UI', sans-serif; }
+  table { border-collapse: collapse; width: 100%; margin: .7rem 0 1.5rem; font-size: .82em; }
+  th, td { border: 1px solid #21262d; padding: .4rem .7rem; text-align: left; vertical-align: top; }
+  th { background: #161b22; color: #8b949e; font-weight: 600; }
+  tr:nth-child(even) { background: #0d1117; }
+  tr:nth-child(odd)  { background: #161b22; }
+  code { background: #161b22; border: 1px solid #21262d; padding: .1rem .35rem; border-radius: 3px; font-size: .9em; color: #79c0ff; }
+  pre { background: #161b22; border: 1px solid #21262d; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto; margin: .5rem 0 1rem; color: #79c0ff; white-space: pre-wrap; word-break: break-all; }
+  .badge { display: inline-block; padding: .1rem .4rem; border-radius: 4px; font-size: .75em; font-weight: 700; }
+  .online    { background: #22c55e22; color: #22c55e; border: 1px solid #22c55e44; }
+  .offline   { background: #ef444422; color: #ef4444; border: 1px solid #ef444444; }
+  .completed { background: #22c55e22; color: #22c55e; border: 1px solid #22c55e44; }
+  .failed    { background: #ef444422; color: #ef4444; border: 1px solid #ef444444; }
+  .running   { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44; }
+  .pending   { background: #6b728022; color: #9ca3af; border: 1px solid #6b728044; }
+  .sev-critical { background: #ef444422; color: #ef4444; border: 1px solid #ef444455; }
+  .sev-high     { background: #f9731622; color: #fdba74; border: 1px solid #f9731655; }
+  .sev-medium   { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44; }
+  .sev-low      { background: #6b728022; color: #9ca3af; border: 1px solid #6b728044; }
+  .finding { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: .9rem 1.1rem; margin-bottom: .7rem; }
+  .finding-header { display: flex; align-items: center; gap: .6rem; margin-bottom: .4rem; font-family: 'Segoe UI', sans-serif; }
+  .finding-title { font-weight: 600; }
+  .finding-body { font-size: .82rem; color: #8b949e; }
+  .finding-body b { color: #e6edf3; }
+  .section-row { margin-top: .35rem; }
+  .agent-card { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: .9rem 1.1rem; margin-bottom: .8rem; }
+  .agent-header { display: flex; gap: 1rem; align-items: center; margin-bottom: .5rem; font-family: 'Segoe UI', sans-serif; }
+  .agent-hostname { font-weight: 700; font-size: 1rem; color: #e6edf3; }
+  .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .3rem; font-size: .8rem; color: #8b949e; }
+  .agent-grid span { color: #e6edf3; }
+  .task-result { background: #0d1117; border: 1px solid #21262d; border-radius: 4px; padding: .5rem .8rem; margin: .3rem 0; font-size: .8rem; }
+  .task-result-header { display: flex; gap: .6rem; align-items: center; margin-bottom: .25rem; }
+  .page-break { page-break-before: always; margin-top: 2rem; }
+  .log-line { border-bottom: 1px solid #21262d11; padding: .2rem 0; font-size: .78rem; }
+  .log-error { color: #ef4444; }
+  .log-warn { color: #f59e0b; }
+  .log-info { color: #8b949e; }
+</style>
+</head>
+<body>
+
+<h1>🔬 Lucy C2 — Technical Report</h1>
+<p class="meta">Generated: {{ generated_at }} &nbsp;·&nbsp; Type: <strong>{{ report_type }}</strong> &nbsp;·&nbsp; CONFIDENTIAL — Authorized Personnel Only</p>
+
+<!-- FINDINGS -->
+<h2>🔎 Security Findings</h2>
+{% for f in findings %}
+<div class="finding">
+  <div class="finding-header">
+    <span class="badge sev-{{ f.severity }}">{{ f.severity | upper }}</span>
+    <code>{{ f.id }}</code>
+    <span class="finding-title">{{ f.title }}</span>
+  </div>
+  <div class="finding-body">
+    <div class="section-row"><b>Description:</b> {{ f.description }}</div>
+    <div class="section-row"><b>Evidence:</b> <code>{{ f.evidence }}</code></div>
+    <div class="section-row"><b>Recommendation:</b> {{ f.recommendation }}</div>
+  </div>
+</div>
+{% else %}
+<p style="color:#6b7280">No findings generated.</p>
+{% endfor %}
+
+<!-- AGENTS DEEP DIVE -->
+<h2>🖥 Compromised Hosts — Technical Detail</h2>
+{% for a in per_agent %}
+<div class="agent-card">
+  <div class="agent-header">
+    <span class="agent-hostname">{{ a.hostname }}</span>
+    <span class="badge {{ a.status }}">{{ a.status }}</span>
+    <code>{{ a.id[:12] }}…</code>
+  </div>
+  <div class="agent-grid">
+    <div>OS: <span>{{ a.os }}</span></div>
+    <div>User: <span>{{ a.username }}</span></div>
+    <div>IP Private: <span>{{ a.ip_private }}</span></div>
+    <div>IP Public: <span>{{ a.ip_public }}</span></div>
+    <div>Tasks: <span>{{ a.task_count }} ({{ a.completed_tasks }} done)</span></div>
+    <div>Credentials: <span>{{ a.credential_count }}</span></div>
+    <div>Last seen: <span>{{ a.last_seen }}</span></div>
+  </div>
+</div>
+{% endfor %}
+
+<!-- TASK EXECUTION DETAIL -->
+<h2>📋 Task Execution Log ({{ tasks | length }} total)</h2>
+<table>
+  <tr><th>ID</th><th>Module</th><th>Action</th><th>Status</th><th>Priority</th><th>Agent</th><th>Created</th><th>Completed</th></tr>
+  {% for t in tasks[:300] %}
+  <tr>
+    <td style="font-size:.75em;color:#6b7280"><code>{{ t.id[:8] if t.id else '—' }}…</code></td>
+    <td><code>{{ t.module }}</code></td>
+    <td>{{ t.action }}</td>
+    <td><span class="badge {{ t.status }}">{{ t.status }}</span></td>
+    <td>{{ t.priority }}</td>
+    <td style="font-size:.75em"><code>{{ t.agent_id[:8] if t.agent_id else '—' }}…</code></td>
+    <td style="font-size:.75em;color:#6b7280">{{ t.created_at }}</td>
+    <td style="font-size:.75em;color:#6b7280">{{ t.completed_at or '—' }}</td>
+  </tr>
+  {% endfor %}
+  {% if tasks | length > 300 %}<tr><td colspan="8" style="color:#6b7280;text-align:center">… {{ tasks | length - 300 }} more truncated</td></tr>{% endif %}
+</table>
+
+<!-- CREDENTIALS FULL DUMP -->
+<h2 class="page-break">🔑 Credential Dump ({{ credentials | length }})</h2>
+<table>
+  <tr><th>#</th><th>URL / Host</th><th>Username</th><th>Password (masked)</th><th>Source</th><th>Confidence</th><th>Tags</th><th>Agent</th><th>Captured</th></tr>
+  {% for c in credentials %}
+  <tr>
+    <td>{{ loop.index }}</td>
+    <td style="word-break:break-all;max-width:160px">{{ c.url or c.hostname or '—' }}</td>
+    <td>{{ c.username }}</td>
+    <td style="color:#6b7280">{{ '●' * [c.password | length, 12] | min if c.password else '—' }}</td>
+    <td>{{ c.source }}</td>
+    <td><span class="badge sev-{{ c.confidence or 'low' }}">{{ c.confidence or '—' }}</span></td>
+    <td style="font-size:.75em">{{ c.tags | join(', ') if c.tags else '—' }}</td>
+    <td style="font-size:.75em"><code>{{ c.agent_id[:8] if c.agent_id else '—' }}…</code></td>
+    <td style="font-size:.75em;color:#6b7280">{{ c.captured_at }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- TIMELINES -->
+{% if timelines %}
+<h2>⏱ Timeline Operations ({{ timelines | length }})</h2>
+<table>
+  <tr><th>Name</th><th>Status</th><th>Steps</th><th>Agent Group</th><th>Created</th></tr>
+  {% for tl in timelines %}
+  <tr>
+    <td>{{ tl.name }}</td>
+    <td><span class="badge {{ tl.status or 'pending' }}">{{ tl.status or 'pending' }}</span></td>
+    <td>{{ tl.steps | length if tl.steps else '—' }}</td>
+    <td>{{ tl.agent_group or '—' }}</td>
+    <td style="font-size:.75em;color:#6b7280">{{ tl.created_at }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<!-- LOGS -->
+<h2 class="page-break">📜 Event Log (last {{ logs | length }})</h2>
+{% for l in logs %}
+<div class="log-line {{ 'log-error' if l.level == 'error' else ('log-warn' if l.level == 'warning' else 'log-info') }}">
+  <code>{{ l.timestamp }}</code> &nbsp;
+  <span class="badge {{ l.level or 'info' }}" style="font-size:.7em">{{ l.level | upper }}</span> &nbsp;
+  [<code>{{ l.agent_id[:8] if l.agent_id else 'system' }}</code>] {{ l.message }}
+</div>
+{% endfor %}
+
+</body>
+</html>

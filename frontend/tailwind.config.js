@@ -1,0 +1,105 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        lucy: {
+          50: '#f8fafc',
+          500: '#ff0055',
+          900: '#7a0029',
+        },
+        flash: {
+          green: '#00ff88',
+          cyan: '#00d4ff',
+          amber: '#ffbe0b',
+          red: '#ff2a2a',
+          pink: '#ff0055',
+          purple: '#a855f7',
+        },
+        surface: {
+          900: '#000000',
+          800: '#0a0a0a',
+          700: '#171717',
+          600: '#262626',
+          500: '#404040',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+      },
+      boxShadow: {
+        'glow-sm': '0 0 8px rgba(255, 0, 85, 0.12)',
+        'glow': '0 0 20px rgba(255, 0, 85, 0.16)',
+        'glow-lg': '0 0 40px rgba(255, 0, 85, 0.20)',
+        'glow-green': '0 0 20px rgba(0, 255, 136, 0.16)',
+        'glow-cyan': '0 0 20px rgba(0, 212, 255, 0.16)',
+        'glow-amber': '0 0 20px rgba(255, 190, 11, 0.16)',
+        'glow-red': '0 0 20px rgba(255, 42, 42, 0.16)',
+        'neon-border': '0 0 0 1px rgba(255, 0, 85, 0.30), inset 0 0 12px rgba(255, 0, 85, 0.05)',
+      },
+      animation: {
+        'gradient-x': 'gradient-x 8s ease infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+      },
+      keyframes: {
+        'gradient-x': {
+          '0%, 100%': { 'background-position': '0% 50%' },
+          '50%': { 'background-position': '100% 50%' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
+        'pulse-glow': {
+          '0%, 100%': { opacity: '0.5', filter: 'brightness(1)' },
+          '50%': { opacity: '1', filter: 'brightness(1.25)' },
+        },
+      },
+    },
+  },
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: [
+      {
+        lucy: {
+          'primary': '#ff0055',
+          'primary-focus': '#d90047',
+          'primary-content': '#ffffff',
+          'secondary': '#525252',
+          'secondary-focus': '#404040',
+          'secondary-content': '#f8fafc',
+          'accent': '#00d4ff',
+          'accent-focus': '#08aecb',
+          'accent-content': '#000000',
+          'neutral': '#171717',
+          'neutral-focus': '#262626',
+          'neutral-content': '#e5e5e5',
+          'base-100': '#000000',
+          'base-200': '#0a0a0a',
+          'base-300': '#171717',
+          'base-content': '#f8fafc',
+          'info': '#00d4ff',
+          'success': '#00ff88',
+          'warning': '#ffbe0b',
+          'error': '#ff2a2a',
+          '--rounded-box': '0.375rem',
+          '--rounded-btn': '0.25rem',
+          '--rounded-badge': '0.125rem',
+          '--animation-btn': '0.15s',
+          '--animation-input': '0.15s',
+          '--btn-focus-scale': '0.98',
+          '--border-btn': '1px',
+          '--tab-border': '1px',
+          '--tab-radius': '0.25rem',
+        },
+      },
+      'dark',
+      'light',
+    ],
+    defaultTheme: 'lucy',
+    darkTheme: 'lucy',
+  },
+}

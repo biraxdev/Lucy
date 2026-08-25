@@ -1,0 +1,25 @@
+title: Suspicious Encoded PowerShell Command
+description: |
+  Detects usage of encoded PowerShell commands, Invoke-Expression, or IEX
+  obfuscation commonly abused by malware and post-exploitation scripts.
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    CommandLine|contains:
+      - ' -enc '
+      - ' -EncodedCommand '
+      - 'IEX('
+      - 'Invoke-Expression'
+      - 'bitsadmin'
+      - 'certutil -urlcache'
+      - 'Invoke-WebRequest'
+  condition: selection
+falsepositives:
+  - System administration scripts
+level: high
+tags:
+  - attack.t1059.001
+  - attack.execution
+  - attack.defense_evasion
