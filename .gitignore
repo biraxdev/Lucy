@@ -20,6 +20,7 @@ dist/
 build/
 *.egg-info/
 *.exe
+lucy-desktop/target/
 
 # Local tools / portable runtimes
 tools/python312/
