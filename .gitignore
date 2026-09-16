@@ -35,6 +35,12 @@ tools/tmp/
 backend/lucy.db*
 data/lucy.db
 data/reports/
+backend/data/reports/
+backend/data/*.db*
+backend/data/.setup_complete
+backend/data/build_audit.log
+celerybeat-schedule*
+backend/celerybeat-schedule*
 .env
 .env.local
 
@@ -42,6 +48,10 @@ data/reports/
 .pytest_cache/
 .coverage
 htmlcov/
+backend/tests/test.db*
+/FBOX_screenshot.jpg
+/test_screenshot.jpg
+/package-lock.json
 
 # IDE
 .vscode/

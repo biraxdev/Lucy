@@ -1,29 +1,52 @@
-# Règles de contexte Devin — Lucy
+# LucyAI — Devin Context Rules
 
-## Principes généraux
-- Ne jamais demander si on arrête/démarre un service ou une tâche. Prendre la décision optimale par défaut.
-- Ne jamais poser de question binaire quand une solution technique est possible. Proposer l'implémentation ; l'utilisateur corrigera si besoin.
-- Chaque action doit faire évoluer l'outil vers un état supérieur.
-- Aucune poudre aux yeux : pas de tests trafiqués, pas de timeouts bidons, pas de réponses factices.
-- Privilégier l'action à la demande de permission.
+## Project Identity
 
-## Intelligence / latitude
-- Anticiper les besoins : persistence, redondance, états de vie, auto-réparation, pack manager.
-- En cas d'ambiguïté, choisir l'interprétation la plus proche du but et la justifier en une phrase.
-- Ne jamais réduire les compétences pour faire passer un test.
-- Ne jamais couper, tronquer ou altérer les données collectées.
-- Préserver l'architecture existante ; ajouter des modules propres plutôt que réécrire.
+LucyAI is an AI-first IDE, autonomous coding agent, and multi-agent
+development system.  Built on reusable foundations from the Lucy platform.
 
-## Build / agent
-- Le build `.exe` est systématique quand on construit un agent.
-- L'agent installé est persistant : service Windows, redémarrage auto, modes dormant / vivant / mort.
-- L'installation ne demande rien avant de builder.
+## General Principles
 
-## Pack Manager
-- Un pack est un `BuildPack` réutilisable (modules + options).
-- Toutes les opérations pack (créer, éditer, dupliquer, supprimer, rechercher, combiner, appliquer, automatiser, télécharger, uploader) doivent être accessibles depuis Lucy.
-- L'interface reste simple : une page, des actions one-click, pas de wizard complexe.
+- Never ask to start/stop a service when a technical solution exists.
+- Never ask binary questions when an implementation is possible.
+- Every action must move the project toward a better state.
+- No fake tests, fabricated timeouts, or mock responses.
+- Prefer action over asking for permission.
+- Follow REUSE > ADAPT > EXTEND > BUILD.
 
-## Vérification
-- Toujours fournir des preuves concrètes (résultats de tests, captures, logs).
-- Tester après chaque modification significative.
+## Intelligence / Latitude
+
+- Anticipate needs: persistence, redundancy, auto-repair.
+- On ambiguity, choose the interpretation closest to the goal and justify.
+- Never reduce capabilities to pass a test.
+- Never truncate or alter collected data.
+- Preserve existing architecture; add clean modules rather than rewriting.
+
+## Important Boundaries
+
+- The offensive / C2 / implant surface is permanently excluded from LucyAI.
+  Do not improve, port, or re-enable any offensive functionality.
+- IDE features (editor, terminal, git, tools) are the product focus.
+- See `MASTER_BLUEPRINT.md` for the full migration boundary.
+
+## Key Documents
+
+- `MASTER_BLUEPRINT.md` — product vision, migration boundary, reuse map
+- `ARCHITECTURE.md` — system architecture
+- `AGENTS.md` — agent development guide
+- `CONTRIBUTING.md` — setup, quality gates, code style
+- `EXECUTION_DIRECTIVE.md` — execution rules and workflow
+- `docs/tasks/TASK_BOARD.md` — task tracking
+
+## Quality Gates
+
+- Backend regression: `cd backend && python -m pytest tests/test_auth.py tests/test_agents.py tests/test_library.py tests/test_metrics.py -v`
+- Backend full baseline: `cd backend && python -m pytest tests/ -v`
+- Frontend: `cd frontend && npm run build` (includes tsc)
+- Lint: `make lint` (safe backend checks + eslint)
+- Pre-commit: `pre-commit run --all-files`
+
+## Verification
+
+- Always provide concrete evidence (test results, screenshots, logs).
+- Test after every significant modification.

@@ -7,16 +7,15 @@ headers = []
 [functions."*"]
 
 [build]
-publish = "C:\\Heybro\\PROJECTS\\ACTIVE\\Lucy\\dist"
+base = "frontend"
+publish = "dist"
 publishOrigin = "config"
 commandOrigin = "config"
 command = "npm run build"
-base = "C:\\Heybro\\PROJECTS\\ACTIVE\\Lucy\\frontend"
 
 [build.environment]
 NODE_VERSION = "20"
 NPM_VERSION = "10"
-VITE_API_BASE_URL = "https://your-backend-url.com"
 
 [build.processing]
 
@@ -29,18 +28,6 @@ VITE_API_BASE_URL = "https://your-backend-url.com"
 [build.processing.js]
 
 [build.services]
-
-[[redirects]]
-from = "/api/*"
-to = "https://your-backend-url.com/api/:splat"
-status = 200.0
-force = true
-
-[redirects.query]
-
-[redirects.conditions]
-
-[redirects.headers]
 
 [[redirects]]
 from = "/*"

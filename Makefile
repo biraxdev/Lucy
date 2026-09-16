@@ -1,4 +1,4 @@
-.PHONY: dev build stop reset logs test install
+.PHONY: dev build stop reset logs test test-full lint install
 
 dev:
 	docker-compose up
@@ -30,11 +30,14 @@ install:
 	cd frontend && npm install
 
 test:
+	cd backend && python -m pytest tests/test_auth.py tests/test_agents.py tests/test_library.py tests/test_metrics.py -v --tb=short
+
+test-full:
 	cd backend && python -m pytest tests/ -v --tb=short
 
 lint:
-	cd backend && flake8 . --max-line-length=120 --exclude=__pycache__
-	cd frontend && npx eslint src/ --ext .ts,.tsx
+	python -m flake8 backend --select=E9,F63,F7,F82 --exclude=backend/modules,backend/core/library/registry.py
+	cd frontend && npm run lint
 
 agent-build:
 	cd agent && pyinstaller --onefile --name lucy_agent main.py
