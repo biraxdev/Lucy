@@ -1,86 +1,128 @@
-# Lucy — System Architecture
+# LucyAI — System Architecture
 
 ## Overview
 
-Lucy is a defensive security monitoring and authorized red-team operations platform. It is split into three main runtime components:
+LucyAI is an AI-first IDE and autonomous coding agent built on a
+reusable platform core extracted from the Lucy project.
 
-- **Backend** (`backend/main.py`) — FastAPI application exposing REST APIs and WebSocket channels.
-- **Frontend** (`frontend/`) — React 18 single-page application built with Vite.
-- **Agent** (`agent/agent.py`) — Lightweight Python endpoint implant that communicates with the C2 server over multiple transports.
+The system is split into runtime layers that communicate through typed
+interfaces:
 
-The platform uses a relational datastore accessed through the Peewee ORM, with SQLite in WAL mode by default and a migration path to PostgreSQL.
+```
+USER
+ ↓
+LUCY UI  (React 18, Vite, Monaco, xterm, ReactFlow)
+ ↓
+API GATEWAY  (FastAPI, WebSocket, SSE)
+ ↓
+TASK MANAGER  (jobs: code / test / review / build)
+ ↓
+PLANNER  (reflect → plan → execute loop)
+ ↓
+MODEL ROUTER  (provider abstraction: Ollama / OpenAI / Anthropic / local)
+ ↓
+AGENT RUNTIME  (tool calls, sandbox, approval gates, durable state)
+ ↓
+TOOL SYSTEM  (filesystem, terminal, git, browser, tests, MCP, …)
+ ↓
+EXECUTION → TEST → DEBUG → FIX → RETEST → REVIEW → GIT → VALIDATION
+```
+
+Future multi-agent topology (Phase 6+):
+
+```
+USER
+ ↓
+ORCHESTRATOR
+ ├── Agent Architect
+ ├── Agent Planner
+ ├── Agent Coder
+ ├── Agent Researcher
+ ├── Agent Tester
+ ├── Agent Debugger
+ ├── Agent Reviewer
+ └── Agent Documentation
+```
+
+Agents may run in parallel when tasks are independent; dependent tasks
+remain sequential.
 
 ## Backend
 
-The backend is a FastAPI application (`backend/main.py`) that loads settings from a `.env` file through `backend/config.py`.
-
-- **Runtime** — `python main.py` initializes the ORM, seeds the admin user, starts WebSocket keepalives, in-memory task workers (portable mode), the alert manager, the orchestrator, and the predictive alert engine.
-- **ORM** — Peewee models are defined under `backend/models/`. Migrations are handled through the model layer.
-- **Database** — SQLite (`sqlite:///./lucy.db`) is used in WAL mode by default. PostgreSQL is supported by changing `DATABASE_URL`.
-- **API routing** — Core routes are mounted under `/api/v1/`, including:
-  - `/api/v1/auth/login`
-  - `/api/v1/agents`
-  - `/api/v1/tasks`
-  - `/api/v1/library`
-- **Middleware stack** — request logging, CORS, JWT/API-key authentication, RBAC, and rate limiting.
+- **Runtime**: Python 3.12, FastAPI, Uvicorn, async
+- **Persistence**: Peewee ORM, SQLite WAL (default), PostgreSQL optional
+- **Auth**: JWT (30 min access / 7 day refresh), RBAC, TOTP, API keys
+- **Task queue**: Celery + Redis (with in-memory fallback for portable mode)
+- **Real-time**: WebSocket event delivery, SSE for streaming AI output
+- **Library**: ResourceProvider Protocol + singleton registry (extensible
+  for repos, files, symbols, tools, knowledge)
 
 ## Frontend
 
-The frontend is a React 18 + TypeScript application bundled with Vite.
+- **Stack**: React 18, TypeScript 5.6, Vite 5, TailwindCSS 3.4, daisyUI 4
+- **State**: Zustand 5 (normalized entity stores), TanStack Query 5
+- **Editor**: @monaco-editor/react (to be extended into full workspace editor)
+- **Terminal**: @xterm/xterm (to be connected to a PTY backend)
+- **Workflow**: ReactFlow node graph (adapt from ScriptBuilder)
+- **AI**: CopilotDrawer / ChatPanel / SSE streaming
+- **Navigation**: CommandPalette (Ctrl+K), react-router-dom v7 lazy routes
 
-- **Dev server** — `npm run dev` (`vite`)
-- **Production build** — `npm run build` (`tsc && vite build`)
-- **Preview server** — `npm run preview`
-- **State / UI** — React Query, Zustand, Tailwind CSS, DaisyUI, React Flow, and xterm for the terminal view.
-- **Build output** — `frontend/dist/`, which can be served directly by the backend when `PORTABLE_MODE=true`.
+## Desktop
 
-## WebSocket Broker
+- `lucy-desktop/` is a Rust egui 0.29 native app reading a local SQLite
+  snapshot (Dashboard / Agents / Tasks / Logs / Chat / Settings).
+- It is **not** reusable as an IDE shell.  A Tauri or Electron wrapper
+  around the web app will be evaluated when desktop distribution is needed.
 
-Real-time agent control is provided through the WebSocket broker in `backend/core/ws_manager.py`.
+## IDE Primitives (to build)
 
-- **Agent route** — `/ws/agent/:id` authenticates the agent, opens a persistent channel, and adds the socket to the connection registry.
-- **Keepalive** — `ConnectionManager.start_keepalive()` sends periodic heartbeats (`WS_HEARTBEAT_INTERVAL`) and enforces ping timeouts.
-- **Buffers** — Incoming heartbeats, task results, and operator chat messages are staged through `HeartbeatBuffer`, `ResultBuffer`, and `ChatBuffer` before being committed to the database.
-- **Push model** — Tasks and commands are pushed to agents over the WebSocket; agents respond with results on the same channel.
+| Primitive | Status | Notes |
+|-----------|--------|-------|
+| File explorer + workspace model | **Missing** | No FS/project abstraction exists |
+| Multi-tab Monaco editor | **Missing** | Monaco dep present, only used in diff viewer |
+| PTY terminal | **Missing** | xterm dep present, page is C2 broadcast shell |
+| Git status / diff / commit UI | **Missing** | No git integration |
+| LSP / IntelliSense | **Missing** | No language server infrastructure |
+| Build / Run / Debug panel | **Missing** | — |
+| Problems / Diagnostics view | **Missing** | — |
+| Settings | **Partial** | Setup page exists, needs IDE-oriented settings |
 
-## Agent Transport
+## Model Router (to build)
 
-The Python agent in `agent/agent.py` is designed to operate with minimal dependencies and supports several transports:
+Simple abstraction selecting models by task type:
 
-- `websocket` — primary, low-latency channel
-- `http` — long-polling fallback
-- `dns`, `smb`, `tcp` — alternative beacon channels
+| Slot | Example | Selection criteria |
+|------|---------|-------------------|
+| FAST_MODEL | GPT-4o-mini, local | Low latency, cheap, simple tasks |
+| CODE_MODEL | Claude Sonnet, DeepSeek Coder | Code generation, editing |
+| REASONING_MODEL | o1, Claude Opus | Complex planning, debugging |
+| LONG_CONTEXT_MODEL | Gemini 1.5 | Large file analysis |
+| LOCAL_MODEL | Ollama | Privacy, offline, zero cost |
 
-Configuration is read from an INI file or the embedded `DEFAULT_CONFIG`. Tunables include `c2_url`, `ws_url`, `api_key`, heartbeat jitter, task timeout, TLS options, and stealth features.
+The router must be evolvable without rewriting the agent runtime.
 
-## Library System
+## Context Engine (to build)
 
-The library is a pluggable module registry for offensive and defensive tools.
+- Repository indexing (file list, symbols, dependency graph)
+- Relevant-context selection (not full-repo dump)
+- Semantic search (embeddings / vector store)
+- Context compression and caching
+- Incremental updates on file changes
 
-- `backend/core/library/registry.py` — central registry that tracks available modules and providers.
-- `backend/core/library/providers/` — provider implementations that fetch or generate modules.
-- `backend/api/library.py` — REST endpoints for listing, searching, uploading, and downloading library entries.
-- Agents can fetch modules at runtime from `/api/v1/modules/{module_id}/download`.
+Goal: maximum relevant information with minimum tokens.
 
-## Threat Intelligence
+## Security Model
 
-Threat-intel capabilities are integrated with the library and alerting pipelines:
+- **Least privilege** for every agent and tool
+- Sandbox execution (ephemeral container per run, fail-closed)
+- Approval gates for destructive operations
+- Filesystem boundaries (workspace root enforcement)
+- Secret isolation (never in logs or model context)
+- Audit trail for all tool calls and file changes
 
-- Alert ingestion, correlation, and enrichment are handled by `backend/core/alert_manager.py`.
-- Predictive alerting is performed by `backend/core/predictive_alerting.py`.
-- Indicators and MITRE mappings can be queried through the chat and library APIs.
+## Conventions
 
-## C2 / Agent Model
-
-```
-Operator  ->  Frontend  ->  REST API  ->  WebSocket Broker  ->  Agent
-Agent     ->  WebSocket  ->  Result buffer  ->  Database  ->  Frontend
-```
-
-1. Operators log in through `/api/v1/auth/login` and receive a JWT.
-2. Operators register or select an agent and dispatch a task.
-3. The task is queued and pushed to the agent over its WebSocket connection.
-4. The agent executes the task and returns a result.
-5. The result is buffered, stored, and surfaced in the frontend.
-
-All sensitive C2 traffic is encrypted. See `SECURITY.md` for details on ECDH key exchange and AES payload encryption.
+- Branch naming: `feature/LUCY-NNN-short-description`
+- Commits: atomic, descriptive messages
+- Tests before merge; lint + typecheck pass required
+- Documentation updated with every significant change

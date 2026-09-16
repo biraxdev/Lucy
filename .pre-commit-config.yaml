@@ -1,0 +1,29 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        files: ^(\.github/|\.devin/|docs/|(AGENTS|ARCHITECTURE|CONTRIBUTING|EXECUTION_DIRECTIVE|MASTER_BLUEPRINT)\.md$|\.netlify/netlify\.toml$|frontend/eslint\.config\.js$)
+      - id: end-of-file-fixer
+        files: ^(\.github/|\.devin/|docs/|(AGENTS|ARCHITECTURE|CONTRIBUTING|EXECUTION_DIRECTIVE|MASTER_BLUEPRINT)\.md$|\.netlify/netlify\.toml$|frontend/eslint\.config\.js$)
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: detect-private-key
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.0
+    hooks:
+      - id: flake8
+        args: ['--select=E9,F63,F7,F82']
+        files: ^backend/
+        exclude: ^backend/modules/|^backend/core/library/registry\.py$
+
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint
+        entry: npm --prefix frontend run lint
+        language: system
+        pass_filenames: false
+        files: ^frontend/src/.*\.(ts|tsx)$
